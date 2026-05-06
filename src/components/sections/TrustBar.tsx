@@ -1,41 +1,45 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Clock, BadgeCheck, Shield, MapPin } from "lucide-react";
+import { Phone } from "lucide-react";
 
-const stats = [
-  { icon: Clock,      value: "24/7",    label: "On-Call Support" },
-  { icon: BadgeCheck, value: "100%",    label: "Pre-Screened Staff" },
-  { icon: Shield,     value: "6-Point", label: "Due Diligence" },
-  { icon: MapPin,     value: "35+",     label: "DFW Neighborhoods" },
-];
+const OFFICE = "817-548-1986";
 
 export default function TrustBar() {
   return (
-    <section
-      className="relative z-10 -mt-1 border-b border-primary-deep/40 bg-primary"
-      aria-label="Trust statistics"
+    <div
+      id="trust-bar"
+      className="sticky top-16 z-40 border-b border-border/60 bg-white/95 shadow-sm backdrop-blur-sm"
+      aria-label="Trust and availability status"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 divide-x divide-white/10 md:grid-cols-4">
-          {stats.map(({ icon: Icon, value, label }, i) => (
-            <motion.div
-              key={label}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="flex flex-col items-center gap-1.5 py-6 px-4 text-center"
-            >
-              <Icon className="h-5 w-5 text-accent" />
-              <span className="text-2xl font-bold text-accent sm:text-3xl">{value}</span>
-              <span className="text-[11px] font-bold uppercase tracking-widest text-white/70">
-                {label}
-              </span>
-            </motion.div>
-          ))}
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6 lg:px-8">
+
+        {/* Left — trust signal */}
+        <p className="hidden text-sm font-semibold text-foreground/70 sm:block">
+          ✔ Trusted Across Dallas–Fort Worth
+        </p>
+
+        {/* Center — live availability */}
+        <div className="flex items-center gap-2">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-60" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
+          </span>
+          <span className="text-sm font-bold text-foreground/80">
+            Coordinator Available Now
+          </span>
         </div>
+
+        {/* Right — call CTA */}
+        <a
+          href={`tel:${OFFICE.replace(/-/g, "")}`}
+          className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-bold text-white transition-all hover:bg-primary-deep hover:scale-[1.02] active:scale-100"
+          data-track="trustbar-call"
+        >
+          <Phone className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Call Now •</span> {OFFICE}
+        </a>
+
       </div>
-    </section>
+    </div>
   );
 }
