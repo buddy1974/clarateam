@@ -117,3 +117,25 @@
 [data-track] {
   cursor: pointer;
 }
+
+/* Scrollbar hide — used in chat widget horizontal scroll */
+@layer utilities {
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* iOS safe-area bottom padding for sticky bars */
+  .pb-safe {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Prevent text inflation on mobile */
+html {
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}

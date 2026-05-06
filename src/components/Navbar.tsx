@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, ChevronRight } from "lucide-react";
 import logo from "@/assets/logo.png";
 
@@ -101,41 +102,30 @@ export default function Navbar() {
       </div>
 
       {/* Mobile drawer */}
-      {open && (
-        <div className="border-t border-border bg-white shadow-lg lg:hidden">
-          <nav className="flex flex-col gap-0.5 px-4 py-3" aria-label="Mobile navigation">
-            {NAV_LINKS.map(({ label, href }) => (
-              <a
-                key={href}
-                href={href}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary hover:text-primary"
-              >
-                <ChevronRight className="h-3.5 w-3.5 text-accent" />
-                {label}
-              </a>
-            ))}
-          </nav>
-          <div className="grid grid-cols-2 gap-2 border-t border-border px-4 py-4">
-            <a
-              href={`tel:${OFFICE.replace(/-/g, "")}`}
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-bold text-white"
-              data-track="mobile-nav-call"
-            >
-              <Phone className="h-4 w-4" /> Call Now
-            </a>
-            <a
-              href="#emergency"
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-2 rounded-full border-2 border-accent py-3 text-sm font-bold text-accent"
-              data-track="mobile-nav-care"
-            >
-              Get Care
-            </a>
-          </div>
-        </div>
-      )}
-    </header>
-  );
-}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="mobile-drawer"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden border-t border-border bg-white shadow-lg lg:hidden"
+          >
+            <nav className="flex flex-col gap-0.5 px-4 py-3" aria-label="Mobile navigation">
+              {NAV_LINKS.map(({ label, href }, i) => (
+                <motion.a
+                  key={href}
+                  href={href}
+                  onClick={() => setOpen(false)}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.2, delay: i * 0.04 }}
+                  className="flex items-center gap-2 rounded-lg px-3 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary hover:text-primary"
+                >
+                  <ChevronRight className="h-3.5 w-3.5 text-accent" />
+                  {label}
+                </motion.a>
+              ))}
+            </nav>
+            <div className="grid grid-cols-2 gap-2 b

@@ -138,20 +138,4 @@ export default function CTASection() {
                   <div className="text-center text-xs font-bold leading-snug text-white">
                     {value}
                   </div>
-                </Wrapper>
-              );
-            })}
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Footer strip */}
-      <div className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-black/20 px-4 py-3.5 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-1.5 text-center text-xs text-white/40 sm:flex-row sm:text-left">
-          <span>© {new Date().getFullYear()} Clara's CareTeam, LLC · {ADDRESS}</span>
-          <span>DFW Residential Care Staffing · 24/7 On-Call</span>
-        </div>
-      </div>
-    </section>
-  );
-}
+       

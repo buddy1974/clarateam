@@ -33,15 +33,4 @@ export default function TrustBar() {
         {/* Right — call CTA */}
         <a
           href={`tel:${OFFICE.replace(/-/g, "")}`}
-          className="inline-flex flex-shrink-0 items-center gap-1.5 rounded-full bg-primary px-3 py-2 text-xs font-bold text-white transition-all hover:bg-primary-deep hover:scale-[1.03] active:scale-100 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm"
-          data-track="trustbar-call"
-        >
-          <Phone className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-          <span className="hidden sm:inline">Call Now • </span>
-          {OFFICE}
-        </a>
-
-      </div>
-    </div>
-  );
-}
+          className="inline-flex flex-shrink-0 items-center gap-1.5 rounded-full bg-primary px-3 py-2 text-xs font-bold text-white tr

@@ -46,8 +46,9 @@ const testimonials = [
 export default function TestimonialsSection() {
   return (
     <section
-      className="bg-white py-16 sm:py-24"
-      aria-label="Testimonials"
+      id="why"
+      className="bg-gradient-to-b from-secondary/25 to-white py-16 sm:py-24"
+      aria-label="Why Clara's CareTeam — testimonials"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -120,10 +121,4 @@ export default function TestimonialsSection() {
                   <div className="text-xs text-foreground/60">{role} · {location}</div>
                 </div>
               </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+            </m
