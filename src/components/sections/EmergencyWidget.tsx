@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Zap, ChevronRight, CheckCircle2, Phone, Mic, Sparkles, Check, Loader2 } from "lucide-react";
 
@@ -58,8 +58,11 @@ export default function EmergencyWidget() {
   const [careType,   setCareType]   = useState<CareType | null>(null);
   const [name,       setName]       = useState("");
   const [phone,      setPhone]      = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted,  setSubmitted]  = useState(false);
+  const [submitting,     setSubmitting]     = useState(false);
+  const [submitted,      setSubmitted]      = useState(false);
+  const [showIdlePrompt, setShowIdlePrompt] = useState(false);
+  const [voicePrefilled, setVoicePrefilled] = useState(false);
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Progress — urgency + care type = 2 steps
   const stepsCompleted = (urgency ? 1 : 0) + (careType ? 1 : 0);
@@ -69,6 +72,37 @@ export default function EmergencyWidget() {
                            "Ready — we can match you now ✓";
 
   const selectedUrgencyOption = URGENCY_OPTIONS.find((o) => o.value === urgency);
+
+  // A7 — idle prompt: reset 9s timer on every selection change
+  useEffect(() => {
+    if (submitted) return;
+    setShowIdlePrompt(false);
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(() => setShowIdlePrompt(true), 9000);
+    return () => { if (idleTimerRef.current) clearTimeout(idleTimerRef.current); };
+  }, [urgency, careType, submitted]);
+
+  // A8 — voice prefill: listen for "voice-input" event with detail.text
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const text = ((e as CustomEvent).detail?.text ?? "").toLowerCase();
+      if (text.includes("today") || text.includes("now") || text.includes("urgent"))
+        setUrgency("today");
+      else if (text.includes("tomorrow") || text.includes("24"))
+        setUrgency("24h");
+      else if (text.includes("week"))
+        setUrgency("this-week");
+      if (text.includes("cna") || text.includes("nurse") || text.includes("medical"))
+        setCareType("cna");
+      else if (text.includes("memory") || text.includes("dementia") || text.includes("alzheimer"))
+        setCareType("memory");
+      else if (text.includes("companion") || text.includes("daily") || text.includes("support"))
+        setCareType("companion");
+      if (text.length > 0) setVoicePrefilled(true);
+    };
+    window.addEventListener("voice-input", handler);
+    return () => window.removeEventListener("voice-input", handler);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,13 +171,23 @@ export default function EmergencyWidget() {
                   </p>
                   <a
                     href={`tel:${OFFICE.replace(/-/g, "")}`}
-                    className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 font-bold text-white shadow-[var(--shadow-soft)] transition-all hover:bg-primary-deep"
+                    className={`inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-bold text-white shadow-[var(--shadow-soft)] transition-all hover:brightness-105 ${
+                      urgency === "today"
+                        ? "bg-accent text-primary shadow-lg shadow-amber-500/30 scale-105"
+                        : "bg-primary hover:bg-primary-deep"
+                    }`}
                     data-track="widget-call-after-submit"
                   >
                     <Phone className="h-4 w-4" />
-                    Or call now for immediate help
+                    Call Now • {OFFICE}
                   </a>
-                  <p className="text-xs text-foreground/40">{OFFICE}</p>
+                  <button
+                    type="button"
+                    onClick={() => window.dispatchEvent(new CustomEvent("open-ai-chat"))}
+                    className="text-sm text-foreground/50 transition-colors hover:text-primary"
+                  >
+                    Ask our AI →
+                  </button>
                 </motion.div>
 
               ) : (
@@ -165,6 +209,20 @@ export default function EmergencyWidget() {
                       </p>
                     </div>
                   </div>
+
+                  {/* A8 — voice prefill notice */}
+                  <AnimatePresence>
+                    {voicePrefilled && (
+                      <motion.p
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mb-4 rounded-lg bg-accent/10 px-3 py-2 text-xs font-semibold text-accent"
+                      >
+                        ✔ We filled this based on what you said.
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
 
                   {/* Progress indicator */}
                   <motion.div
@@ -201,7 +259,7 @@ export default function EmergencyWidget() {
                       <p className="mb-3 text-xs font-bold uppercase tracking-widest text-foreground/55">
                         When do you need care?
                       </p>
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                         {URGENCY_OPTIONS.map(({ value, label, sub, highlight }) => {
                           const isSelected = urgency === value;
                           return (
@@ -278,7 +336,7 @@ export default function EmergencyWidget() {
                       <p className="mb-3 text-xs font-bold uppercase tracking-widest text-foreground/55">
                         What type of care do you need?
                       </p>
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                         {CARE_OPTIONS.map(({ value, label, sub }) => {
                           const isSelected = careType === value;
                           return (
@@ -418,6 +476,30 @@ export default function EmergencyWidget() {
                         </span>
                       </div>
                     </div>
+
+                    {/* A7 — idle AI nudge */}
+                    <AnimatePresence>
+                      {showIdlePrompt && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 6 }}
+                          transition={{ duration: 0.35 }}
+                          className="mt-2 text-center"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowIdlePrompt(false);
+                              window.dispatchEvent(new CustomEvent("open-ai-chat"));
+                            }}
+                            className="text-xs font-semibold text-accent underline-offset-2 hover:underline"
+                          >
+                            Need help choosing? Ask our AI →
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </form>
                 </motion.div>
               )}
