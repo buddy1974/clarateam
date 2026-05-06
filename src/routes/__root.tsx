@@ -1,6 +1,4 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
-
-import appCss from "../styles.css?url";
+import { Outlet, Link, createRootRoute } from "@tanstack/react-router";
 
 function NotFoundComponent() {
   return (
@@ -25,46 +23,6 @@ function NotFoundComponent() {
 }
 
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Clara's CareTeam | Reliable Residential Care Staffing in DFW" },
-      { name: "description", content: "AI-powered, compliance-first residential care staffing for DFW. PRN coverage, professional caregivers, memory care specialists & fractional leadership — 24/7." },
-      { name: "author", content: "Clara's CareTeam" },
-      { property: "og:title", content: "Clara's CareTeam | Residential Care Staffing" },
-      { property: "og:description", content: "Peace of mind, every shift. Family-owned, fully vetted caregivers across DFW." },
-      { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Clara's CareTeam" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Clara's CareTeam | Residential Care Staffing" },
-      { name: "twitter:description", content: "Peace of mind, every shift. Fully vetted, compliance-ready professionals matched to your residents in minutes, not days." },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
-      { rel: "apple-touch-icon", href: "/favicon.ico" },
-    ],
-  }),
-  shellComponent: RootShell,
-  component: RootComponent,
+  component: () => <Outlet />,
   notFoundComponent: NotFoundComponent,
 });
-
-function RootShell({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
-
-function RootComponent() {
-  return <Outlet />;
-}
