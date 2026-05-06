@@ -117,7 +117,7 @@ export default function FAQSection() {
                           </p>
                           <a
                             href="tel:18175481986"
-                            className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-xs font-bold text-white"
+                            className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-xs font-bold text-black"
                             data-track="faq-urgent-call"
                           >
                             Call Now — 817-548-1986

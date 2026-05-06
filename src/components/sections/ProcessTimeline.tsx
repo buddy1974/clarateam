@@ -95,7 +95,7 @@ export default function ProcessTimeline() {
               </div>
 
               <h3 className="font-serif text-lg font-bold text-primary">{title}</h3>
-              <p className="mt-2 text-sm font-semibold text-accent">{desc}</p>
+              <p className="mt-2 text-sm text-gray-600">{desc}</p>
             </motion.div>
           ))}
         </div>
@@ -151,7 +151,7 @@ export default function ProcessTimeline() {
         >
           <a
             href="#emergency"
-            className="inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-extrabold text-primary shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.03] hover:brightness-105"
+            className="inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-extrabold text-black shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.03] hover:brightness-105"
             data-track="process-cta"
           >
             Get Care Today →

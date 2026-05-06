@@ -126,14 +126,25 @@ export default function EmergencyWidget() {
   return (
     <section
       id="emergency"
-      className="relative overflow-hidden bg-gradient-to-br from-[#140a1e] via-[#1e0f2e] to-[#140a1e] py-16 sm:py-20"
+      className="relative overflow-hidden bg-gray-50 py-16 sm:py-20"
       aria-label="Get care now"
     >
-      {/* Gold accent rule */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent to-transparent" />
+      {/* Section top border */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-border" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
+          <div className="mb-8 text-center">
+            <span className="inline-block rounded-full bg-accent/15 px-4 py-1.5 text-xs font-extrabold uppercase tracking-widest text-primary">
+              Get Started
+            </span>
+            <h2 className="mt-3 font-serif text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Get Care Today
+            </h2>
+            <p className="mt-3 text-base text-gray-600">
+              Tell us what you need — we'll match you within hours.
+            </p>
+          </div>
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -505,6 +516,7 @@ export default function EmergencyWidget() {
               )}
             </AnimatePresence>
           </motion.div>
+        </div>
         </div>
       </div>
     </section>
