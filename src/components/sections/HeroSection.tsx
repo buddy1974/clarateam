@@ -105,7 +105,7 @@ export default function HeroSection() {
             <div className="flex flex-col gap-3 sm:flex-row">
               <a
                 href="#emergency"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-extrabold text-primary shadow-lg shadow-amber-500/30 transition-all hover:scale-[1.04] hover:brightness-105 active:scale-100 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-extrabold text-black shadow-lg shadow-amber-500/30 transition-all hover:scale-[1.04] hover:brightness-105 active:scale-100 sm:w-auto"
                 data-track="hero-request"
               >
                 Get Care Today <ArrowRight className="h-4 w-4" />

@@ -139,7 +139,7 @@ export default function EmergencyWidget() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.65 }}
-            className="overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm"
+            className="overflow-hidden rounded-xl bg-white shadow-[var(--shadow-elegant)]"
           >
             <AnimatePresence mode="wait">
 
@@ -160,12 +160,12 @@ export default function EmergencyWidget() {
                   >
                     <CheckCircle2 className="h-10 w-10 text-green-600" />
                   </motion.div>
-                  <h3 className="font-serif text-2xl font-bold text-primary sm:text-3xl">
+                  <h3 className="font-serif text-2xl font-bold text-gray-900 sm:text-3xl">
                     You're all set.
                   </h3>
-                  <p className="max-w-sm text-base text-foreground/65">
+                  <p className="max-w-sm text-base text-gray-600">
                     A care coordinator will reach out shortly.{" "}
-                    <strong className="text-primary">
+                    <strong className="text-gray-900">
                       We respond within 15 minutes.
                     </strong>
                   </p>
@@ -184,7 +184,7 @@ export default function EmergencyWidget() {
                   <button
                     type="button"
                     onClick={() => window.dispatchEvent(new CustomEvent("open-ai-chat"))}
-                    className="text-sm text-foreground/50 transition-colors hover:text-primary"
+                    className="text-sm text-gray-500 transition-colors hover:text-gray-900"
                   >
                     Ask our AI →
                   </button>
@@ -201,10 +201,10 @@ export default function EmergencyWidget() {
                       <Zap className="h-5 w-5 text-accent" />
                     </div>
                     <div>
-                      <h2 className="font-serif text-2xl font-bold text-primary sm:text-3xl">
+                      <h2 className="font-serif text-2xl font-bold text-gray-900 sm:text-3xl">
                         Get Care Now
                       </h2>
-                      <p className="mt-0.5 text-sm text-foreground/60">
+                      <p className="mt-0.5 text-sm text-gray-600">
                         Tell us what you need — we'll match you within hours.
                       </p>
                     </div>
@@ -229,7 +229,7 @@ export default function EmergencyWidget() {
                     className="mb-6 flex items-center gap-3"
                     layout
                   >
-                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100">
                       <motion.div
                         className="h-full rounded-full bg-accent"
                         animate={{ width: `${(stepsCompleted / 2) * 100}%` }}
@@ -244,7 +244,7 @@ export default function EmergencyWidget() {
                         exit={{ opacity: 0, y: -4 }}
                         transition={{ duration: 0.25 }}
                         className={`whitespace-nowrap text-xs font-bold ${
-                          stepsCompleted === 2 ? "text-accent" : "text-foreground/50"
+                          stepsCompleted === 2 ? "text-accent" : "text-gray-500"
                         }`}
                       >
                         {progressLabel}
@@ -256,7 +256,7 @@ export default function EmergencyWidget() {
 
                     {/* Step 1 — Urgency */}
                     <div>
-                      <p className="mb-3 text-xs font-bold uppercase tracking-widest text-foreground/55">
+                      <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-500">
                         When do you need care?
                       </p>
                       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -273,8 +273,8 @@ export default function EmergencyWidget() {
                               transition={{ duration: 0.2 }}
                               className={`relative rounded-2xl border-2 p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                                 isSelected
-                                  ? "border-accent bg-accent/8 shadow-[0_0_0_3px_oklch(0.74_0.14_75/0.15)]"
-                                  : "border-border hover:border-accent/50"
+                                  ? "border-accent bg-accent/10 shadow-[0_0_0_3px_oklch(0.74_0.14_75/0.15)]"
+                                  : "border-gray-200 hover:border-accent/50"
                               }`}
                             >
                               {highlight && (
@@ -283,7 +283,7 @@ export default function EmergencyWidget() {
                                 </span>
                               )}
                               <div className="flex items-center justify-between">
-                                <div className={`text-sm font-bold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                                <div className="text-sm font-bold text-gray-900">
                                   {label}
                                 </div>
                                 <AnimatePresence>
@@ -300,7 +300,7 @@ export default function EmergencyWidget() {
                                   )}
                                 </AnimatePresence>
                               </div>
-                              <div className="mt-0.5 text-[11px] text-foreground/50">{sub}</div>
+                              <div className="mt-0.5 text-[11px] text-gray-500">{sub}</div>
                             </motion.button>
                           );
                         })}
@@ -333,7 +333,7 @@ export default function EmergencyWidget() {
 
                     {/* Step 2 — Care type */}
                     <div>
-                      <p className="mb-3 text-xs font-bold uppercase tracking-widest text-foreground/55">
+                      <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-500">
                         What type of care do you need?
                       </p>
                       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -348,14 +348,14 @@ export default function EmergencyWidget() {
                               animate={{ scale: isSelected ? 1.03 : 1 }}
                               whileTap={{ scale: 0.97 }}
                               transition={{ duration: 0.2 }}
-                              className={`rounded-2xl border-2 p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                              className={`rounded-2xl border-2 p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                                 isSelected
-                                  ? "border-primary bg-primary/5 shadow-[0_0_0_3px_oklch(0.30_0.14_332/0.10)]"
-                                  : "border-border hover:border-primary/40"
+                                  ? "border-accent bg-accent/10 shadow-[0_0_0_3px_oklch(0.74_0.14_75/0.15)]"
+                                  : "border-gray-200 hover:border-accent/50"
                               }`}
                             >
                               <div className="flex items-center justify-between">
-                                <div className={`text-sm font-bold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                                <div className="text-sm font-bold text-gray-900">
                                   {label}
                                 </div>
                                 <AnimatePresence>
@@ -365,14 +365,14 @@ export default function EmergencyWidget() {
                                       animate={{ scale: 1, opacity: 1 }}
                                       exit={{ scale: 0, opacity: 0 }}
                                       transition={{ duration: 0.2 }}
-                                      className="flex h-5 w-5 items-center justify-center rounded-full bg-primary"
+                                      className="flex h-5 w-5 items-center justify-center rounded-full bg-accent"
                                     >
-                                      <Check className="h-3 w-3 text-white" />
+                                      <Check className="h-3 w-3 text-black" />
                                     </motion.div>
                                   )}
                                 </AnimatePresence>
                               </div>
-                              <div className="mt-0.5 text-[11px] text-foreground/50">{sub}</div>
+                              <div className="mt-0.5 text-[11px] text-gray-500">{sub}</div>
                             </motion.button>
                           );
                         })}
@@ -381,9 +381,9 @@ export default function EmergencyWidget() {
 
                     {/* Step 3 — Optional contact */}
                     <div>
-                      <p className="mb-3 text-xs font-bold uppercase tracking-widest text-foreground/55">
+                      <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-500">
                         Your info{" "}
-                        <span className="normal-case font-normal text-foreground/40 tracking-normal">
+                        <span className="normal-case font-normal text-gray-400 tracking-normal">
                           (optional — speeds up matching)
                         </span>
                       </p>
@@ -393,14 +393,14 @@ export default function EmergencyWidget() {
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           placeholder="Your name"
-                          className="min-h-[44px] w-full rounded-xl border-2 border-border bg-background px-4 py-3.5 text-sm font-medium placeholder:text-foreground/35 transition-colors focus:border-primary focus:outline-none"
+                          className="min-h-[44px] w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-sm font-medium text-gray-900 placeholder:text-gray-400 transition-colors focus:border-accent focus:outline-none"
                         />
                         <input
                           type="tel"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           placeholder="Best phone number"
-                          className="min-h-[44px] w-full rounded-xl border-2 border-border bg-background px-4 py-3.5 text-sm font-medium placeholder:text-foreground/35 transition-colors focus:border-primary focus:outline-none"
+                          className="min-h-[44px] w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-sm font-medium text-gray-900 placeholder:text-gray-400 transition-colors focus:border-accent focus:outline-none"
                         />
                       </div>
                     </div>
@@ -411,7 +411,7 @@ export default function EmergencyWidget() {
                         type="submit"
                         disabled={submitting}
                         whileTap={{ scale: 0.98 }}
-                        className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-accent py-4 text-base font-extrabold text-primary shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02] hover:brightness-105 disabled:opacity-70"
+                        className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-accent py-4 text-base font-extrabold text-black shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02] hover:brightness-105 disabled:opacity-70"
                         data-track="emergency-widget-submit"
                       >
                         <AnimatePresence mode="wait">
@@ -443,7 +443,7 @@ export default function EmergencyWidget() {
                       </motion.button>
 
                       {/* Micro-trust line */}
-                      <p className="text-center text-[11px] font-semibold text-foreground/40">
+                      <p className="text-center text-[11px] font-semibold text-gray-400">
                         ✔ No obligation &nbsp;•&nbsp; ✔ Fast response &nbsp;•&nbsp; ✔ Fully vetted staff
                       </p>
 
@@ -452,23 +452,23 @@ export default function EmergencyWidget() {
                         <button
                           type="button"
                           onClick={() => window.dispatchEvent(new CustomEvent("open-ai-chat"))}
-                          className="flex items-center gap-1 text-xs text-foreground/50 transition-colors hover:text-primary"
+                          className="flex items-center gap-1 text-xs text-gray-500 transition-colors hover:text-gray-900"
                         >
                           Not sure? Ask our AI →
                         </button>
                         <button
                           type="button"
                           onClick={() => window.dispatchEvent(new CustomEvent("open-ai-chat"))}
-                          className="flex items-center gap-1 text-xs font-semibold text-foreground/50 transition-colors hover:text-primary"
+                          className="flex items-center gap-1 text-xs font-semibold text-gray-500 transition-colors hover:text-gray-900"
                         >
                           <Mic className="h-3 w-3" />
                           Speak instead
                         </button>
-                        <span className="text-xs text-foreground/35">
+                        <span className="text-xs text-gray-400">
                           Or call:{" "}
                           <a
                             href={`tel:${OFFICE.replace(/-/g, "")}`}
-                            className="font-bold text-primary"
+                            className="font-bold text-gray-900"
                             data-track="widget-inline-call"
                           >
                             {OFFICE}

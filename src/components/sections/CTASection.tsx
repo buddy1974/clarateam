@@ -63,7 +63,7 @@ export default function CTASection() {
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
               href={`tel:${OFFICE.replace(/-/g, "")}`}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-bold text-white shadow-[var(--shadow-gold)] transition-all hover:scale-[1.03] hover:opacity-95 sm:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-bold text-black shadow-[var(--shadow-gold)] transition-all hover:scale-[1.03] hover:brightness-105 sm:w-auto"
               data-track="cta-office-call"
             >
               <Phone className="h-4 w-4" /> Office: {OFFICE}
