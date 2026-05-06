@@ -23,17 +23,26 @@ export const Route = createFileRoute("/")({
         content:
           "AI-powered, compliance-first residential care staffing for DFW. PRN coverage, professional caregivers, memory care specialists & fractional leadership — 24/7.",
       },
+      { name: "robots", content: "index, follow" },
       { property: "og:title", content: "Clara's CareTeam | Residential Care Staffing" },
       {
         property: "og:description",
         content: "Peace of mind, every shift. Family-owned, fully vetted caregivers across DFW.",
       },
+      { property: "og:url", content: "https://claracareteam.com" },
+      { property: "og:image", content: "https://claracareteam.com/og-image.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://claracareteam.com" },
     ],
   }),
 });
 
 const OFFICE = "817-265-5762";
 const MOBILE = "469-853-5038";
+const EMAIL = "info@claracareteam.com";
 
 function Index() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -69,6 +78,7 @@ function Index() {
             onClick={() => setMenuOpen((v) => !v)}
             className="rounded-md p-2 text-foreground lg:hidden"
             aria-label="Toggle menu"
+            aria-expanded={menuOpen}
           >
             {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -378,7 +388,7 @@ function Index() {
                 <Smartphone className="h-4 w-4" /> Mobile {MOBILE}
               </Button>
             </a>
-            <a href="mailto:info@claracareteam.com" className="w-full sm:w-auto">
+            <a href={`mailto:${EMAIL}`} className="w-full sm:w-auto">
               <Button
                 size="lg"
                 variant="outline"

@@ -23,6 +23,8 @@ dist-ssr
 # Claude Code
 .claude/settings.local.json
 
+*.bak
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
