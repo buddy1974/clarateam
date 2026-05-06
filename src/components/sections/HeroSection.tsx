@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Phone, CheckCircle2, ArrowRight, Sparkles, ChevronDown, Mic } from "lucide-react";
-import heroHome from "@/assets/hero-home.jpg";
 
 const OFFICE = "817-548-1986";
 
@@ -39,7 +38,7 @@ export default function HeroSection() {
       {/* Background */}
       <div className="absolute inset-0">
         <Image
-          src={heroHome}
+          src="/hero-bg.png"
           alt="Caregiver assisting elderly at home"
           fill
           priority
