@@ -128,4 +128,14 @@ export default function Navbar() {
             <a
               href="#emergency"
               onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-2 rounded-full border-2 border-accen
+              className="flex items-center justify-center gap-2 rounded-full border-2 border-accent py-3 text-sm font-bold text-accent"
+              data-track="mobile-nav-care"
+            >
+              Get Care
+            </a>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
