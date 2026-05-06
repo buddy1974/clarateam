@@ -36,42 +36,28 @@ export default function HeroSection() {
       className="relative flex min-h-screen items-center"
       aria-label="Hero — Clara's CareTeam residential care staffing"
     >
-      {/* Background image */}
-      <div className="absolute inset-0 -z-20 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0">
         <Image
           src={heroHome}
-          alt="Warm residential care home environment"
+          alt="Caregiver assisting elderly at home"
           fill
           priority
           className="object-cover object-center"
           sizes="100vw"
         />
+        {/* Directional overlay — dense left for text legibility, fades right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#140a1e]/90 to-[#140a1e]/40" />
+        {/* Bottom vignette */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#140a1e]/60 to-transparent" />
+        {/* Gold ambient glow */}
+        <div
+          className="absolute right-0 top-0 h-[500px] w-[500px] -translate-y-1/3 translate-x-1/4 rounded-full opacity-15 blur-[130px]"
+          style={{ background: "oklch(0.74 0.14 75)" }}
+        />
       </div>
 
-      {/* Directional dark overlay — left heavy for text, fades right */}
-      <div
-        className="absolute inset-0 -z-10"
-        style={{
-          background:
-            "linear-gradient(to right, rgba(20,10,30,0.88) 0%, rgba(20,10,30,0.72) 50%, rgba(20,10,30,0.38) 100%)",
-        }}
-      />
-
-      {/* Subtle bottom vignette */}
-      <div
-        className="absolute bottom-0 left-0 right-0 -z-10 h-40"
-        style={{
-          background: "linear-gradient(to top, rgba(20,10,30,0.6), transparent)",
-        }}
-      />
-
-      {/* Gold ambient glow — top right */}
-      <div
-        className="absolute right-0 top-0 -z-10 h-[500px] w-[500px] -translate-y-1/3 translate-x-1/4 rounded-full opacity-15 blur-[130px]"
-        style={{ background: "oklch(0.74 0.14 75)" }}
-      />
-
-      <div className="relative mx-auto w-full max-w-7xl px-4 pb-20 pt-28 sm:px-6 lg:px-8 lg:pb-28 lg:pt-36">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-20 pt-28 sm:px-6 lg:px-8 lg:pb-28 lg:pt-36">
         <div className="max-w-2xl">
 
           {/* Badge */}
@@ -181,7 +167,7 @@ export default function HeroSection() {
           <motion.div
             animate={{ y: [0, -6, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="w-64 rounded-2xl border border-white/20 bg-white/10 p-5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+            className="w-64 rounded-xl bg-black/20 p-6 backdrop-blur-sm"
           >
             <div className="mb-3 flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.8)]" />
