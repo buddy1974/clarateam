@@ -11,7 +11,6 @@ const NAV_LINKS = [
   { label: "Services", href: "#services" },
   { label: "How It Works", href: "#process" },
   { label: "Why Us", href: "#why" },
-  { label: "FAQ", href: "#faq" },
   { label: "Contact", href: "#contact" },
 ] as const;
 
@@ -30,13 +29,13 @@ export default function Navbar() {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
         background: scrolled
-          ? "oklch(1 0 0 / 0.97)"
-          : "oklch(1 0 0 / 0)",
+          ? "rgba(255,255,255,0.97)"
+          : "transparent",
         borderBottom: scrolled
           ? "1px solid oklch(0.91 0.012 320)"
           : "1px solid transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
-        boxShadow: scrolled ? "var(--shadow-card)" : "none",
+        backdropFilter: scrolled ? "blur(16px)" : "none",
+        boxShadow: scrolled ? "0 2px 24px rgba(0,0,0,0.08)" : "none",
       }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
@@ -56,7 +55,11 @@ export default function Navbar() {
             <a
               key={href}
               href={href}
-              className="text-sm font-semibold text-foreground/80 transition-colors hover:text-primary"
+              className={`text-sm font-semibold transition-colors ${
+                scrolled
+                  ? "text-foreground/80 hover:text-primary"
+                  : "text-white/85 hover:text-white"
+              }`}
             >
               {label}
             </a>
@@ -85,7 +88,11 @@ export default function Navbar() {
         {/* Mobile hamburger */}
         <button
           onClick={() => setOpen((v) => !v)}
-          className="rounded-lg p-2 text-foreground transition-colors hover:bg-secondary lg:hidden"
+          className={`rounded-lg p-2 transition-colors lg:hidden ${
+            scrolled
+              ? "text-foreground hover:bg-secondary"
+              : "text-white hover:bg-white/15"
+          }`}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
         >
@@ -121,14 +128,4 @@ export default function Navbar() {
             <a
               href="#emergency"
               onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-2 rounded-full border-2 border-accent py-3 text-sm font-bold text-accent"
-              data-track="mobile-nav-care"
-            >
-              Get Care
-            </a>
-          </div>
-        </div>
-      )}
-    </header>
-  );
-}
+              className="flex items-center justify-center gap-2 rounded-full border-2 border-accen

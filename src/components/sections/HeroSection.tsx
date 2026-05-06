@@ -2,24 +2,30 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Phone, Shield, Clock, CheckCircle2, ArrowRight, Sparkles, ChevronDown } from "lucide-react";
+import { Phone, CheckCircle2, ArrowRight, Sparkles, ChevronDown, Mic } from "lucide-react";
 import heroHome from "@/assets/hero-home.jpg";
 
 const OFFICE = "817-548-1986";
 
-const STATS = [
-  { k: "24/7", v: "On-Call" },
-  { k: "35+", v: "DFW Areas" },
-  { k: "100%", v: "Pre-Screened" },
-  { k: "0", v: "Min. Hours" },
+const TRUST = [
+  "Background Checked",
+  "CNA / RN Verified",
+  "Available Within Hours",
+  "24/7 Support",
+];
+
+const FLOAT_STATS = [
+  { icon: "🟢", label: "Available Now", sub: "Staff ready to deploy" },
+  { icon: "⚡", label: "Same-Day Placement", sub: "Most shifts filled < 4 hrs" },
+  { icon: "✅", label: "100% Verified Staff", sub: "6-point due diligence" },
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 28 },
   show: (delay = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1], delay },
+    transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay },
   }),
 };
 
@@ -34,51 +40,45 @@ export default function HeroSection() {
       <div className="absolute inset-0 -z-20 overflow-hidden">
         <Image
           src={heroHome}
-          alt="Bright, welcoming residential care home"
+          alt="Warm residential care home environment"
           fill
           priority
-          className="object-cover"
+          className="object-cover object-center"
           sizes="100vw"
         />
       </div>
 
-      {/* Gradient overlay — dark plum for contrast */}
+      {/* Directional dark overlay — left heavy for text, fades right */}
       <div
         className="absolute inset-0 -z-10"
         style={{
           background:
-            "linear-gradient(135deg, oklch(0.16 0.10 332 / 0.93) 0%, oklch(0.26 0.14 332 / 0.86) 50%, oklch(0.36 0.16 332 / 0.72) 100%)",
+            "linear-gradient(to right, rgba(20,10,30,0.88) 0%, rgba(20,10,30,0.72) 50%, rgba(20,10,30,0.38) 100%)",
         }}
       />
 
-      {/* Subtle dot grid */}
+      {/* Subtle bottom vignette */}
       <div
-        className="absolute inset-0 -z-10 opacity-[0.05]"
+        className="absolute bottom-0 left-0 right-0 -z-10 h-40"
         style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-          backgroundSize: "32px 32px",
+          background: "linear-gradient(to top, rgba(20,10,30,0.6), transparent)",
         }}
       />
 
-      {/* Gold accent glow */}
+      {/* Gold ambient glow — top right */}
       <div
-        className="absolute right-0 top-0 -z-10 h-[600px] w-[600px] -translate-y-1/4 translate-x-1/4 rounded-full opacity-20 blur-[120px]"
+        className="absolute right-0 top-0 -z-10 h-[500px] w-[500px] -translate-y-1/3 translate-x-1/4 rounded-full opacity-15 blur-[130px]"
         style={{ background: "oklch(0.74 0.14 75)" }}
       />
 
-      <div className="relative mx-auto w-full max-w-7xl px-4 pb-20 pt-28 sm:px-6 lg:px-8 lg:pb-24 lg:pt-36">
+      <div className="relative mx-auto w-full max-w-7xl px-4 pb-20 pt-28 sm:px-6 lg:px-8 lg:pb-28 lg:pt-36">
         <div className="max-w-2xl">
+
           {/* Badge */}
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            custom={0}
-          >
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm">
+          <motion.div variants={fadeUp} initial="hidden" animate="show" custom={0}>
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm">
               <Sparkles className="h-3.5 w-3.5 text-accent" />
-              DFW's Compliance-First Care Staffing
+              DFW's Trusted Residential Care Staffing
             </span>
           </motion.div>
 
@@ -88,15 +88,13 @@ export default function HeroSection() {
             initial="hidden"
             animate="show"
             custom={0.1}
-            className="mt-6 font-serif text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl"
+            className="mt-6 font-serif text-4xl font-bold leading-[1.06] tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-[4rem]"
           >
-            Reliable Staff for{" "}
-            <span className="relative">
-              <span className="bg-gradient-to-r from-accent via-amber-300 to-amber-100 bg-clip-text text-transparent">
-                Residential Care Homes
-              </span>
+            Find Trusted Care for{" "}
+            <span className="bg-gradient-to-r from-accent via-amber-300 to-amber-100 bg-clip-text text-transparent">
+              Your Loved One
             </span>
-{" "}<span className="inline-block">Across DFW</span>
+            {" "}— Within Hours, Not Days
           </motion.h1>
 
           {/* Sub-headline */}
@@ -105,14 +103,13 @@ export default function HeroSection() {
             initial="hidden"
             animate="show"
             custom={0.2}
-            className="mt-6 max-w-xl text-lg leading-relaxed text-white/90 sm:text-xl"
+            className="mt-6 max-w-lg text-lg leading-relaxed text-white/85 sm:text-xl"
           >
-            Peace of mind, every shift — without the stress. Fully vetted,{" "}
-            <strong className="text-white">6-point screened</strong> professionals
-            matched to your residents in minutes, not days.
+            Fully vetted caregivers. Immediate placement.{" "}
+            <strong className="text-white">Peace of mind for Dallas families.</strong>
           </motion.p>
 
-          {/* CTA buttons */}
+          {/* CTAs */}
           <motion.div
             variants={fadeUp}
             initial="hidden"
@@ -120,105 +117,55 @@ export default function HeroSection() {
             custom={0.3}
             className="mt-8"
           >
-            <div className="flex flex-col gap-4 sm:flex-row">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <a
                 href="#emergency"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-extrabold text-primary shadow-lg shadow-amber-500/30 transition-all hover:scale-[1.04] hover:opacity-95 active:scale-100 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-extrabold text-primary shadow-lg shadow-amber-500/30 transition-all hover:scale-[1.04] hover:brightness-105 active:scale-100 sm:w-auto"
                 data-track="hero-request"
               >
                 Get Care Today <ArrowRight className="h-4 w-4" />
               </a>
               <a
                 href={`tel:${OFFICE.replace(/-/g, "")}`}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-white/70 bg-white/10 px-6 py-4 text-base font-bold text-white backdrop-blur-sm transition-all hover:bg-white hover:text-primary sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-white/60 bg-white/10 px-6 py-4 text-base font-bold text-white backdrop-blur-sm transition-all hover:bg-white hover:text-primary sm:w-auto"
                 data-track="hero-call"
               >
                 <Phone className="h-4 w-4" /> Call Now • {OFFICE}
               </a>
             </div>
-            <button
-              onClick={() => window.dispatchEvent(new CustomEvent("open-ai-chat"))}
-              className="mt-4 flex items-center gap-1 text-sm text-white/70 transition-colors hover:text-white"
-            >
-              Not sure what you need? Ask our AI →
-            </button>
+
+            {/* AI + Voice links */}
+            <div className="mt-4 flex flex-wrap items-center gap-4">
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent("open-ai-chat"))}
+                className="flex items-center gap-1 text-sm text-white/65 transition-colors hover:text-white"
+              >
+                Not sure what you need? Ask our AI →
+              </button>
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent("open-ai-chat"))}
+                className="flex items-center gap-2 rounded-full border border-white/20 bg-white/8 px-4 py-2 text-sm font-semibold text-white/80 backdrop-blur-sm transition-all hover:bg-white/15 hover:text-white"
+                aria-label="Speak to get help"
+              >
+                <Mic className="h-3.5 w-3.5 text-accent" />
+                Speak instead — tell us what you need
+              </button>
+            </div>
           </motion.div>
 
-          {/* Trust signals */}
+          {/* Trust indicators */}
           <motion.div
             variants={fadeUp}
             initial="hidden"
             animate="show"
             custom={0.4}
-            className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm font-semibold text-white/85"
+            className="mt-10 grid grid-cols-2 gap-x-6 gap-y-2.5 sm:flex sm:flex-wrap sm:items-center sm:gap-x-8 sm:gap-y-3"
           >
-            <div className="flex items-center gap-2">
-              <Shield className="h-4 w-4 text-accent" />
-              6-Point Due Diligence
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-accent" />
-              24/7 On-Call
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-accent" />
-              TWC & Survey Ready
-            </div>
-          </motion.div>
-          {/* Mobile stat pills — desktop shows floating card instead */}
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            custom={0.5}
-            className="mt-6 flex gap-2 overflow-x-auto pb-1 lg:hidden"
-            aria-hidden="true"
-          >
-            {STATS.map(({ k, v }) => (
-              <span
-                key={v}
-                className="flex-shrink-0 rounded-full bg-white/15 px-3 py-1.5 text-xs text-white backdrop-blur-sm"
-              >
-                <span className="font-bold">{k}</span> {v}
-              </span>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Floating stats card */}
-        <motion.div
-          initial={{ opacity: 0, x: 60 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="z-10 hidden rounded-2xl bg-white p-5 shadow-[var(--shadow-elegant)] ring-1 ring-border lg:absolute lg:bottom-0 lg:right-0 lg:block"
-          aria-hidden="true"
-        >
-          <div className="grid grid-cols-2 gap-4">
-            {STATS.map(({ k, v }) => (
-              <div key={v} className="text-center">
-                <div className="text-xl font-bold text-primary">{k}</div>
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-foreground/60">
-                  {v}
-                </div>
+            {TRUST.map((item) => (
+              <div key={item} className="flex items-center gap-2 text-sm font-semibold text-white/90">
+                <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-accent" />
+                {item}
               </div>
             ))}
-          </div>
-        </motion.div>
-      </div>
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-6 left-1/2 -translate-x-1/2"
-        animate={{ y: [0, 6, 0] }}
-        transition={{ repeat: Infinity, duration: 1.4 }}
-        aria-hidden="true"
-      >
-        <a
-          href="#trust-bar"
-          className="flex items-center justify-center text-white/50 transition-colors hover:text-white/80"
-        >
-          <ChevronDown className="h-6 w-6" />
-        </a>
-      </motion.div>
-    </section>
-  );
-}
+          </motion.div>
+      
