@@ -92,7 +92,7 @@ export default function EmergencyWidget() {
   return (
     <section
       id="emergency"
-      className="relative overflow-hidden bg-gradient-to-br from-secondary/60 via-white to-secondary/30 py-16 sm:py-20"
+      className="relative overflow-hidden bg-gradient-to-br from-[#140a1e] via-[#1e0f2e] to-[#140a1e] py-16 sm:py-20"
       aria-label="Get care now"
     >
       {/* Gold accent rule */}
@@ -105,7 +105,7 @@ export default function EmergencyWidget() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.65 }}
-            className="overflow-hidden rounded-3xl bg-white shadow-[var(--shadow-elegant)] ring-1 ring-border"
+            className="overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm"
           >
             <AnimatePresence mode="wait">
 
@@ -217,3 +217,214 @@ export default function EmergencyWidget() {
                                 isSelected
                                   ? "border-accent bg-accent/8 shadow-[0_0_0_3px_oklch(0.74_0.14_75/0.15)]"
                                   : "border-border hover:border-accent/50"
+                              }`}
+                            >
+                              {highlight && (
+                                <span className="absolute -top-2.5 left-3 rounded-full bg-accent px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-primary">
+                                  Recommended
+                                </span>
+                              )}
+                              <div className="flex items-center justify-between">
+                                <div className={`text-sm font-bold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                                  {label}
+                                </div>
+                                <AnimatePresence>
+                                  {isSelected && (
+                                    <motion.div
+                                      initial={{ scale: 0, opacity: 0 }}
+                                      animate={{ scale: 1, opacity: 1 }}
+                                      exit={{ scale: 0, opacity: 0 }}
+                                      transition={{ duration: 0.2 }}
+                                      className="flex h-5 w-5 items-center justify-center rounded-full bg-accent"
+                                    >
+                                      <Check className="h-3 w-3 text-primary" />
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+                              <div className="mt-0.5 text-[11px] text-foreground/50">{sub}</div>
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Contextual urgency message */}
+                      <AnimatePresence>
+                        {selectedUrgencyOption && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                            animate={{ opacity: 1, height: "auto", marginTop: 10 }}
+                            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                            className="overflow-hidden"
+                          >
+                            {(() => {
+                              const c = contextColors[selectedUrgencyOption.contextColor];
+                              return (
+                                <div className={`flex items-center gap-2 rounded-xl border ${c.border} ${c.bg} px-4 py-2.5`}>
+                                  <span className={`h-2 w-2 flex-shrink-0 rounded-full ${c.dot} ${c.glow}`} />
+                                  <p className={`text-sm font-semibold ${c.text}`}>
+                                    {selectedUrgencyOption.contextMsg}
+                                  </p>
+                                </div>
+                              );
+                            })()}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    {/* Step 2 — Care type */}
+                    <div>
+                      <p className="mb-3 text-xs font-bold uppercase tracking-widest text-foreground/55">
+                        What type of care do you need?
+                      </p>
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                        {CARE_OPTIONS.map(({ value, label, sub }) => {
+                          const isSelected = careType === value;
+                          return (
+                            <motion.button
+                              key={value}
+                              type="button"
+                              onClick={() => setCareType(value)}
+                              aria-pressed={isSelected}
+                              animate={{ scale: isSelected ? 1.03 : 1 }}
+                              whileTap={{ scale: 0.97 }}
+                              transition={{ duration: 0.2 }}
+                              className={`rounded-2xl border-2 p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                                isSelected
+                                  ? "border-primary bg-primary/5 shadow-[0_0_0_3px_oklch(0.30_0.14_332/0.10)]"
+                                  : "border-border hover:border-primary/40"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className={`text-sm font-bold ${isSelected ? "text-primary" : "text-foreground"}`}>
+                                  {label}
+                                </div>
+                                <AnimatePresence>
+                                  {isSelected && (
+                                    <motion.div
+                                      initial={{ scale: 0, opacity: 0 }}
+                                      animate={{ scale: 1, opacity: 1 }}
+                                      exit={{ scale: 0, opacity: 0 }}
+                                      transition={{ duration: 0.2 }}
+                                      className="flex h-5 w-5 items-center justify-center rounded-full bg-primary"
+                                    >
+                                      <Check className="h-3 w-3 text-white" />
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+                              <div className="mt-0.5 text-[11px] text-foreground/50">{sub}</div>
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Step 3 — Optional contact */}
+                    <div>
+                      <p className="mb-3 text-xs font-bold uppercase tracking-widest text-foreground/55">
+                        Your info{" "}
+                        <span className="normal-case font-normal text-foreground/40 tracking-normal">
+                          (optional — speeds up matching)
+                        </span>
+                      </p>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <input
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Your name"
+                          className="min-h-[44px] w-full rounded-xl border-2 border-border bg-background px-4 py-3.5 text-sm font-medium placeholder:text-foreground/35 transition-colors focus:border-primary focus:outline-none"
+                        />
+                        <input
+                          type="tel"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          placeholder="Best phone number"
+                          className="min-h-[44px] w-full rounded-xl border-2 border-border bg-background px-4 py-3.5 text-sm font-medium placeholder:text-foreground/35 transition-colors focus:border-primary focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* CTA */}
+                    <div className="space-y-3 pt-1">
+                      <motion.button
+                        type="submit"
+                        disabled={submitting}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-accent py-4 text-base font-extrabold text-primary shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02] hover:brightness-105 disabled:opacity-70"
+                        data-track="emergency-widget-submit"
+                      >
+                        <AnimatePresence mode="wait">
+                          {submitting ? (
+                            <motion.span
+                              key="loading"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="flex items-center gap-2"
+                            >
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              Finding available caregivers…
+                            </motion.span>
+                          ) : (
+                            <motion.span
+                              key="idle"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="flex items-center gap-2"
+                            >
+                              <Sparkles className="h-4 w-4" />
+                              Match Me Instantly
+                              <ChevronRight className="h-4 w-4" />
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
+                      </motion.button>
+
+                      {/* Micro-trust line */}
+                      <p className="text-center text-[11px] font-semibold text-foreground/40">
+                        ✔ No obligation &nbsp;•&nbsp; ✔ Fast response &nbsp;•&nbsp; ✔ Fully vetted staff
+                      </p>
+
+                      {/* AI + Voice + Phone */}
+                      <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => window.dispatchEvent(new CustomEvent("open-ai-chat"))}
+                          className="flex items-center gap-1 text-xs text-foreground/50 transition-colors hover:text-primary"
+                        >
+                          Not sure? Ask our AI →
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => window.dispatchEvent(new CustomEvent("open-ai-chat"))}
+                          className="flex items-center gap-1 text-xs font-semibold text-foreground/50 transition-colors hover:text-primary"
+                        >
+                          <Mic className="h-3 w-3" />
+                          Speak instead
+                        </button>
+                        <span className="text-xs text-foreground/35">
+                          Or call:{" "}
+                          <a
+                            href={`tel:${OFFICE.replace(/-/g, "")}`}
+                            className="font-bold text-primary"
+                            data-track="widget-inline-call"
+                          >
+                            {OFFICE}
+                          </a>
+                        </span>
+                      </div>
+                    </div>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
