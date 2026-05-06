@@ -195,4 +195,89 @@ export default function EmergencyWidget() {
                     {/* Step 3 — Optional contact */}
                     <div>
                       <p className="mb-3 text-xs font-bold uppercase tracking-widest text-foreground/55">
-                        Y
+                        Your info{" "}
+                        <span className="normal-case font-normal text-foreground/40 tracking-normal">
+                          (optional — speeds up matching)
+                        </span>
+                      </p>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <input
+                          type="text"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Your name"
+                          className="w-full rounded-xl border-2 border-border bg-background px-4 py-3.5 text-sm font-medium placeholder:text-foreground/35 transition-colors focus:border-primary focus:outline-none"
+                        />
+                        <input
+                          type="tel"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          placeholder="Best phone number"
+                          className="w-full rounded-xl border-2 border-border bg-background px-4 py-3.5 text-sm font-medium placeholder:text-foreground/35 transition-colors focus:border-primary focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* CTA */}
+                    <div className="space-y-3">
+                      <button
+                        type="submit"
+                        disabled={submitting}
+                        className="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-4 text-base font-extrabold text-primary shadow-lg shadow-amber-500/25 transition-all hover:scale-[1.02] hover:brightness-105 active:scale-100 disabled:opacity-60"
+                        data-track="emergency-widget-submit"
+                      >
+                        {submitting ? (
+                          "Matching…"
+                        ) : (
+                          <>
+                            <Sparkles className="h-4 w-4" />
+                            Match Me Instantly
+                            <ChevronRight className="h-4 w-4" />
+                          </>
+                        )}
+                      </button>
+
+                      {error && (
+                        <p className="text-center text-xs text-destructive">{error}</p>
+                      )}
+
+                      {/* AI + Voice links */}
+                      <div className="flex flex-wrap items-center justify-center gap-4 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => window.dispatchEvent(new CustomEvent("open-ai-chat"))}
+                          className="flex items-center gap-1 text-sm text-foreground/55 transition-colors hover:text-primary"
+                        >
+                          Not sure? Ask our AI →
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => window.dispatchEvent(new CustomEvent("open-ai-chat"))}
+                          className="flex items-center gap-1.5 text-sm font-semibold text-foreground/55 transition-colors hover:text-primary"
+                          aria-label="Speak instead of typing"
+                        >
+                          <Mic className="h-3.5 w-3.5" />
+                          Speak instead
+                        </button>
+                        <span className="text-xs text-foreground/35">
+                          Or call:{" "}
+                          <a
+                            href={`tel:${OFFICE.replace(/-/g, "")}`}
+                            className="font-bold text-primary"
+                            data-track="widget-inline-call"
+                          >
+                            {OFFICE}
+                          </a>
+                        </span>
+                      </div>
+                    </div>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
