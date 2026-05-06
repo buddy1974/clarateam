@@ -177,4 +177,48 @@ export default function HeroSection() {
             {STATS.map(({ k, v }) => (
               <span
                 key={v}
-                className="flex-shrink-0 
+                className="flex-shrink-0 rounded-full bg-white/15 px-3 py-1.5 text-xs text-white backdrop-blur-sm"
+              >
+                <span className="font-bold">{k}</span> {v}
+              </span>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Floating stats card */}
+        <motion.div
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="z-10 hidden rounded-2xl bg-white p-5 shadow-[var(--shadow-elegant)] ring-1 ring-border lg:absolute lg:bottom-0 lg:right-0 lg:block"
+          aria-hidden="true"
+        >
+          <div className="grid grid-cols-2 gap-4">
+            {STATS.map(({ k, v }) => (
+              <div key={v} className="text-center">
+                <div className="text-xl font-bold text-primary">{k}</div>
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-foreground/60">
+                  {v}
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+      {/* Scroll indicator */}
+      <motion.div
+        className="absolute bottom-6 left-1/2 -translate-x-1/2"
+        animate={{ y: [0, 6, 0] }}
+        transition={{ repeat: Infinity, duration: 1.4 }}
+        aria-hidden="true"
+      >
+        <a
+          href="#trust-bar"
+          className="flex items-center justify-center text-white/50 transition-colors hover:text-white/80"
+        >
+          <ChevronDown className="h-6 w-6" />
+        </a>
+      </motion.div>
+    </section>
+  );
+}
