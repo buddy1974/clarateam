@@ -111,12 +111,13 @@ export default function RootLayout({
       className={`${playfair.variable} ${inter.variable}`}
     >
       <head>
+        <meta name="theme-color" content="#140a1e" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
         />
       </head>
-      <body>{children}</body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

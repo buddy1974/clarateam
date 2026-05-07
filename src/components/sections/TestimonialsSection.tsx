@@ -112,6 +112,7 @@ export default function TestimonialsSection() {
                     alt={name}
                     fill
                     loading="lazy"
+                    quality={75}
                     className="object-cover"
                     sizes="40px"
                   />
@@ -121,4 +122,10 @@ export default function TestimonialsSection() {
                   <div className="text-xs text-foreground/60">{role} · {location}</div>
                 </div>
               </div>
-            </m
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -79,7 +79,7 @@ export default function Navbar() {
           </a>
           <a
             href="#emergency"
-            className="inline-flex items-center gap-1.5 rounded-full border-2 border-accent bg-accent/10 px-5 py-2.5 text-sm font-bold text-accent transition-all hover:bg-accent hover:text-white"
+            className="inline-flex items-center gap-1.5 rounded-full border-2 border-accent bg-accent/10 px-5 py-2.5 text-sm font-bold text-accent transition-all hover:bg-accent hover:text-black"
             data-track="nav-get-care"
           >
             Get Care Now <ChevronRight className="h-3.5 w-3.5" />
@@ -128,4 +128,27 @@ export default function Navbar() {
                 </motion.a>
               ))}
             </nav>
-            <div className="grid grid-cols-2 gap-2 b
+            <div className="grid grid-cols-2 gap-2 border-t border-border px-4 py-4">
+              <a
+                href={`tel:${OFFICE.replace(/-/g, "")}`}
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-bold text-white transition-all hover:bg-primary-deep active:scale-[0.97]"
+                data-track="mobile-nav-call"
+              >
+                <Phone className="h-4 w-4" /> Call Now
+              </a>
+              <a
+                href="#emergency"
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-center gap-2 rounded-full border-2 border-accent bg-accent/10 py-3 text-sm font-bold text-accent transition-all hover:bg-accent hover:text-black active:scale-[0.97]"
+                data-track="mobile-nav-care"
+              >
+                Get Care
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+}

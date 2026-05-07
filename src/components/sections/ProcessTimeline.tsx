@@ -123,4 +123,42 @@ export default function ProcessTimeline() {
                   className="relative flex items-start gap-5 pl-2"
                 >
                   {/* Dot on timeline */}
-                  <div className="relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg
+                  <div className="relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-deep shadow-[var(--shadow-soft)]">
+                    <Icon className="h-5 w-5 text-white" />
+                    <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[9px] font-extrabold text-primary">
+                      {n}
+                    </span>
+                  </div>
+
+                  {/* Content */}
+                  <div className="pb-1 pt-1">
+                    <h3 className="font-serif text-base font-bold text-primary">{title}</h3>
+                    <p className="mt-1 text-sm font-semibold text-accent">{desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.55, delay: 0.5 }}
+          className="mt-14 text-center"
+        >
+          <a
+            href="#emergency"
+            className="inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-extrabold text-black shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.03] hover:brightness-105"
+            data-track="process-cta"
+          >
+            Get Care Today →
+          </a>
+        </motion.div>
+
+      </div>
+    </section>
+  );
+}
