@@ -40,16 +40,26 @@ export default function Navbar() {
       }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <a href="#top" aria-label="Clara's CareTeam home">
-          <Image
-            src={logo}
-            alt="Clara's CareTeam"
-            className={`h-14 w-auto sm:h-16 transition-opacity hover:opacity-90 ${
-              !scrolled ? "drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)]" : ""
-            }`}
-            priority
-          />
+        {/* Logo — glass card on hero, plain on scroll */}
+        <a href="#top" aria-label="Clara's CareTeam home" className="flex-shrink-0">
+          <div
+            className="inline-flex items-center rounded-2xl px-3 transition-all duration-300"
+            style={!scrolled ? {
+              background: "rgba(0, 0, 0, 0.28)",
+              backdropFilter: "blur(14px)",
+              WebkitBackdropFilter: "blur(14px)",
+              boxShadow:
+                "0 0 36px oklch(0.74 0.14 75 / 0.55), 0 6px 24px rgba(0,0,0,0.55)",
+              border: "1px solid rgba(255,255,255,0.18)",
+            } : undefined}
+          >
+            <Image
+              src={logo}
+              alt="Clara's CareTeam"
+              className="h-16 w-auto transition-opacity hover:opacity-90"
+              priority
+            />
+          </div>
         </a>
 
         {/* Desktop nav */}
@@ -140,17 +150,4 @@ export default function Navbar() {
                 <Phone className="h-4 w-4" /> Call Now
               </a>
               <a
-                href="#emergency"
-                onClick={() => setOpen(false)}
-                className="flex items-center justify-center gap-2 rounded-full border-2 border-accent bg-accent/10 py-3 text-sm font-bold text-accent transition-all hover:bg-accent hover:text-black active:scale-[0.97]"
-                data-track="mobile-nav-care"
-              >
-                Get Care
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
-  );
-}
+                href
