@@ -150,4 +150,17 @@ export default function Navbar() {
                 <Phone className="h-4 w-4" /> Call Now
               </a>
               <a
-                href
+                href="#emergency"
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-center gap-2 rounded-full border-2 border-accent bg-accent/10 py-3 text-sm font-bold text-accent transition-all hover:bg-accent hover:text-black active:scale-[0.97]"
+                data-track="mobile-nav-care"
+              >
+                Get Care
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+}
