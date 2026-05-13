@@ -116,11 +116,11 @@ export default function FAQSection() {
                             Need immediate help?
                           </p>
                           <a
-                            href="tel:18175481986"
+                            href="tel:18172655762"
                             className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-xs font-bold text-black"
                             data-track="faq-urgent-call"
                           >
-                            Call Now — 817-548-1986
+                            Call Now — 817-265-5762
                           </a>
                         </div>
                       )}

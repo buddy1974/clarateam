@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s | Clara's CareTeam",
   },
   description:
-    "Clara's CareTeam provides compliance-first residential care staffing across DFW — Arlington, Fort Worth, Dallas, Grand Prairie & 35+ neighborhoods. PRN coverage, certified caregivers, memory care & fractional leadership. Call 817-548-1986.",
+    "Clara's CareTeam provides compliance-first residential care staffing across DFW — Arlington, Fort Worth, Dallas, Grand Prairie & 35+ neighborhoods. PRN coverage, certified caregivers, memory care & fractional leadership. Call 817-265-5762.",
   keywords: [
     "residential care staffing DFW",
     "caregiver staffing Arlington TX",
@@ -80,7 +80,7 @@ const JSON_LD = {
   description:
     "Family-owned residential care staffing agency serving DFW. PRN coverage, certified caregivers, memory care specialists & fractional leadership.",
   url: SITE_URL,
-  telephone: "+18175481986",
+  telephone: "+18172655762",
   email: "info@claracareteam.com",
   address: {
     "@type": "PostalAddress",

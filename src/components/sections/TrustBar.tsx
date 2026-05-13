@@ -2,13 +2,13 @@
 
 import { Phone } from "lucide-react";
 
-const OFFICE = "817-548-1986";
+const OFFICE = "817-265-5762";
 
 export default function TrustBar() {
   return (
     <div
       id="trust-bar"
-      className="sticky top-16 z-40 border-b border-gray-200/60 bg-white/97 shadow-md backdrop-blur-sm"
+      className="sticky top-[72px] z-40 border-b border-gray-200/60 bg-white shadow-md"
       aria-label="Trust and availability status"
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2 sm:px-6 lg:px-8">

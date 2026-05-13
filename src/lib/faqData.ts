@@ -21,7 +21,7 @@ export const faqData: FAQCategory[] = [
         id: "same-day",
         question: "Can you provide same-day or emergency coverage?",
         answer:
-          "Yes — same-day and emergency coverage is our specialty. We operate 24/7 and can typically have a qualified caregiver at your facility within hours. Call 817-548-1986 right now and we'll start matching immediately.",
+          "Yes — same-day and emergency coverage is our specialty. We operate 24/7 and can typically have a qualified caregiver at your facility within hours. Call 817-265-5762 right now and we'll start matching immediately.",
         keywords: ["today", "now", "urgent", "asap", "emergency", "same day", "immediately", "tonight", "right now", "fast", "quick"],
         urgency: true,
       },
@@ -110,7 +110,7 @@ export const faqData: FAQCategory[] = [
         id: "cost",
         question: "How does pricing work?",
         answer:
-          "Pricing is based on care type, shift length, and urgency. We offer competitive DFW market rates with no hidden fees. Contact us at 817-548-1986 or info@claracareteam.com for a same-day quote.",
+          "Pricing is based on care type, shift length, and urgency. We offer competitive DFW market rates with no hidden fees. Contact us at 817-265-5762 or info@claracareteam.com for a same-day quote.",
         keywords: ["cost", "price", "pricing", "rate", "fee", "charge", "pay", "much", "expensive", "affordable", "quote"],
       },
       {
@@ -144,7 +144,7 @@ export const faqData: FAQCategory[] = [
         id: "get-started",
         question: "How do I get started?",
         answer:
-          "Call or text us at 817-548-1986, email info@claracareteam.com, or fill out the Get Care Now form above. We respond within minutes during business hours, and our on-call team handles urgent requests 24/7.",
+          "Call or text us at 817-265-5762, email info@claracareteam.com, or fill out the Get Care Now form above. We respond within minutes during business hours, and our on-call team handles urgent requests 24/7.",
         keywords: ["start", "begin", "sign up", "register", "contact", "get started", "first step", "onboard"],
       },
     ],

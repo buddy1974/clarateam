@@ -195,7 +195,7 @@ function VoiceModal({ open, status, transcript, onStop, onConfirm, onClose }: Mo
                   </h3>
                   <p className="text-sm text-foreground/65">
                     Your browser doesn't support voice input. Please use the text field, or call us at{" "}
-                    <a href="tel:18175481986" className="font-bold text-primary">817-548-1986</a>.
+                    <a href="tel:18172655762" className="font-bold text-primary">817-265-5762</a>.
                   </p>
                 </>
               ) : status === "listening" ? (

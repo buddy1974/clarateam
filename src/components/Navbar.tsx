@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, ChevronRight } from "lucide-react";
 import logo from "@/assets/logo.png";
 
-const OFFICE = "817-548-1986";
+const OFFICE = "817-265-5762";
 
 const NAV_LINKS = [
   { label: "Services", href: "#services" },
@@ -45,7 +45,9 @@ export default function Navbar() {
           <Image
             src={logo}
             alt="Clara's CareTeam"
-            className="h-12 w-auto sm:h-14 transition-opacity hover:opacity-90"
+            className={`h-14 w-auto sm:h-16 transition-opacity hover:opacity-90 ${
+              !scrolled ? "drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)]" : ""
+            }`}
             priority
           />
         </a>
@@ -92,7 +94,7 @@ export default function Navbar() {
           className={`rounded-lg p-2 transition-colors lg:hidden ${
             scrolled
               ? "text-foreground hover:bg-secondary"
-              : "text-white hover:bg-white/15"
+              : "text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)] hover:bg-white/15"
           }`}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}

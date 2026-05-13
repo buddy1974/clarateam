@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Phone, Smartphone, Mail, MapPin, ArrowRight } from "lucide-react";
 
-const OFFICE  = "817-548-1986";
+const OFFICE  = "817-265-5762";
 const MOBILE  = "469-853-5038";
 const EMAIL   = "info@claracareteam.com";
 const ADDRESS = "P.O. Box 200455, Arlington, TX 76006";
@@ -61,11 +61,11 @@ export default function CTASection() {
           </h2>
 
           {/* Subtext */}
-          <p className="mx-auto mt-5 max-w-lg text-lg leading-relaxed text-white/80">
-            Family-owned. Dallas-based. Available 24/7.{" "}
-            <span className="font-semibold text-white">
-              We'll match you with the right caregiver — fast.
-            </span>
+          <p className="mx-auto mt-5 max-w-lg text-lg leading-relaxed text-white/75">
+            Family-owned. Dallas/Fort Worth–based. Available 24/7.
+          </p>
+          <p className="mx-auto mt-3 max-w-md text-xl font-semibold leading-snug text-white">
+            We'll match you with the right caregiver — fast.
           </p>
 
           {/* Micro trust line */}

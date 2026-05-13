@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Phone, CheckCircle2, ArrowRight, Sparkles, ChevronDown, Mic } from "lucide-react";
 
-const OFFICE = "817-548-1986";
+const OFFICE = "817-265-5762";
 
 const TRUST = [
   "Background Checked",
@@ -47,6 +47,8 @@ export default function HeroSection() {
         />
         {/* Directional overlay — dense left for text legibility, fades right */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#140a1e]/90 to-[#140a1e]/40" />
+        {/* Top vignette — keeps navbar logo + hamburger legible against any background */}
+        <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-black/50 to-transparent" />
         {/* Bottom vignette */}
         <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#140a1e]/60 to-transparent" />
         {/* Gold ambient glow */}
@@ -63,7 +65,7 @@ export default function HeroSection() {
           <motion.div variants={fadeUp} initial="hidden" animate="show" custom={0}>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm">
               <Sparkles className="h-3.5 w-3.5 text-accent" />
-              DFW's Trusted Residential Care Staffing
+              Clara's CareTeam — DFW Residential Care Staffing
             </span>
           </motion.div>
 
@@ -77,7 +79,7 @@ export default function HeroSection() {
           >
             Find Trusted Care for{" "}
             <span className="bg-gradient-to-r from-accent via-amber-300 to-amber-100 bg-clip-text text-transparent">
-              Your Loved One
+              Your Loved One or Facility
             </span>
             {" "}— Within Hours, Not Days
           </motion.h1>
@@ -91,7 +93,7 @@ export default function HeroSection() {
             className="mt-6 max-w-lg text-lg leading-relaxed text-white/85 sm:text-xl"
           >
             Fully vetted caregivers. Immediate placement.{" "}
-            <strong className="text-white">Peace of mind for Dallas families.</strong>
+            <strong className="text-white">Peace of mind for Dallas/Fort Worth families.</strong>
           </motion.p>
 
           {/* CTAs */}

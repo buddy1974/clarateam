@@ -8,7 +8,7 @@ import {
 import { matchFAQ, detectUrgency } from "@/lib/faqData";
 import SpeakToUsButton from "./SpeakToUsButton";
 
-const OFFICE = "817-548-1986";
+const OFFICE = "817-265-5762";
 
 interface Message {
   id: string;
@@ -25,7 +25,7 @@ const GREETING: Message = {
 };
 
 const FALLBACK =
-  "I'm not sure about that specific question — our care coordinators can answer it quickly. Call us at 817-548-1986 or fill out the Get Care Now form above.";
+  "I'm not sure about that specific question — our care coordinators can answer it quickly. Call us at 817-265-5762 or fill out the Get Care Now form above.";
 
 const INITIAL_PROMPTS = [
   "I need care today",

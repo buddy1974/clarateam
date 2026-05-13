@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, Zap } from "lucide-react";
 
-const OFFICE = "817-548-1986";
+const OFFICE = "817-265-5762";
 
 export default function StickyMobileCTA() {
   const [visible, setVisible] = useState(false);
