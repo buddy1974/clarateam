@@ -25,4 +25,11 @@ export default function HomePage() {
         <TestimonialsSection />
         <FAQSection />
         <CTASection />
-      <
+      </main>
+
+      {/* Floating widgets */}
+      <AIChatWidget />
+      <StickyMobileCTA />
+    </>
+  );
+}

@@ -294,4 +294,7 @@ export default function CompliancePage() {
         />
       </main>
       <AIChatWidget />
-      <Stick
+      <StickyMobileCTA />
+    </>
+  );
+}
