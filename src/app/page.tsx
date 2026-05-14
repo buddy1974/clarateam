@@ -3,6 +3,7 @@ import HeroSection from "@/components/sections/HeroSection";
 import TrustBar from "@/components/sections/TrustBar";
 import EmergencyWidget from "@/components/sections/EmergencyWidget";
 import ServicesGrid from "@/components/sections/ServicesGrid";
+import SolutionsPlatform from "@/components/sections/SolutionsPlatform";
 import ProcessTimeline from "@/components/sections/ProcessTimeline";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import FAQSection from "@/components/sections/FAQSection";
@@ -19,15 +20,9 @@ export default function HomePage() {
         <TrustBar />
         <EmergencyWidget />
         <ServicesGrid />
+        <SolutionsPlatform />
         <ProcessTimeline />
         <TestimonialsSection />
         <FAQSection />
         <CTASection />
-      </main>
-
-      {/* Floating widgets */}
-      <AIChatWidget />
-      <StickyMobileCTA />
-    </>
-  );
-}
+      <
