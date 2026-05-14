@@ -39,24 +39,21 @@ export default function Navbar() {
         boxShadow: scrolled ? "0 2px 24px rgba(0,0,0,0.08)" : "none",
       }}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        {/* Logo — glass card on hero, plain on scroll */}
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
+        {/* Logo — gold CTA-style pill on hero, plain on scroll */}
         <a href="#top" aria-label="Clara's CareTeam home" className="flex-shrink-0">
           <div
-            className="inline-flex items-center rounded-2xl px-3 transition-all duration-300"
+            className="inline-flex items-center rounded-3xl px-4 py-1 transition-all duration-300 hover:brightness-110 active:scale-[0.97]"
             style={!scrolled ? {
-              background: "rgba(0, 0, 0, 0.28)",
-              backdropFilter: "blur(14px)",
-              WebkitBackdropFilter: "blur(14px)",
+              background: "oklch(0.74 0.14 75)",
               boxShadow:
-                "0 0 36px oklch(0.74 0.14 75 / 0.55), 0 6px 24px rgba(0,0,0,0.55)",
-              border: "1px solid rgba(255,255,255,0.18)",
+                "0 0 48px oklch(0.74 0.14 75 / 0.75), 0 8px 32px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.25)",
             } : undefined}
           >
             <Image
               src={logo}
               alt="Clara's CareTeam"
-              className="h-16 w-auto transition-opacity hover:opacity-90"
+              className="h-24 w-auto transition-opacity hover:opacity-95"
               priority
             />
           </div>
@@ -151,16 +148,4 @@ export default function Navbar() {
               </a>
               <a
                 href="#emergency"
-                onClick={() => setOpen(false)}
-                className="flex items-center justify-center gap-2 rounded-full border-2 border-accent bg-accent/10 py-3 text-sm font-bold text-accent transition-all hover:bg-accent hover:text-black active:scale-[0.97]"
-                data-track="mobile-nav-care"
-              >
-                Get Care
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
-  );
-}
+                onClick={() => setOpen(false)

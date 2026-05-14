@@ -58,7 +58,7 @@ export default function HeroSection() {
         />
       </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-20 pt-28 sm:px-6 lg:px-8 lg:pb-28 lg:pt-36">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-20 pt-36 sm:px-6 lg:px-8 lg:pb-28 lg:pt-44">
         <div className="max-w-2xl">
 
           {/* Badge */}

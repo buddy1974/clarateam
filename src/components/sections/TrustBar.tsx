@@ -8,7 +8,7 @@ export default function TrustBar() {
   return (
     <div
       id="trust-bar"
-      className="sticky top-[88px] z-40 border-b border-gray-200/60 bg-white shadow-md"
+      className="sticky top-[104px] z-40 border-b border-gray-200/60 bg-white shadow-md"
       aria-label="Trust and availability status"
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2 sm:px-6 lg:px-8">
