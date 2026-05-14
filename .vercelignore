@@ -1,0 +1,25 @@
+# Vercel ignores these files during upload — smaller payload = faster builds
+
+# Docs / repo meta
+README.md
+*.md
+.github/
+docs/
+
+# Dev tooling (not needed at build time)
+.husky/
+.eslintcache
+*.log
+*.local
+
+# Test artifacts
+coverage/
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Local env (never upload secrets)
+.env.local
+.env.*.local
