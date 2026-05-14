@@ -1,7 +1,7 @@
 {
   "framework": "nextjs",
 
-  "ignoreCommand": "git diff HEAD^ HEAD --name-only | grep -qE '^(src/|public/|package\\.json|next\\.config)'",
+  "ignoreCommand": "! git diff HEAD^ HEAD --name-only | grep -qE '^(src/|public/|package\\.json|next\\.config)'",
 
   "headers": [
     {
