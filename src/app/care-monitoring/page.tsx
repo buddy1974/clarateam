@@ -15,6 +15,9 @@ import {
   ClipboardList,
   Bell,
   CheckCircle2,
+  Brain,
+  Lock,
+  MonitorPlay,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -75,6 +78,78 @@ function MonitoringHero() {
           >
             Learn More <ArrowRight className="h-4 w-4" />
           </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Section 0: AI Infrastructure / Core Technology ─── */
+const coreTech = [
+  {
+    icon: Brain,
+    title: "Smart Monitoring Infrastructure",
+    sub: "AI Infrastructure",
+    body: "Our monitoring layer uses advanced AI infrastructure to analyze care environments in real time — detecting patterns, flagging anomalies, and surfacing insights that manual oversight alone cannot catch.",
+  },
+  {
+    icon: MonitorPlay,
+    title: "Real-Time Room Activity Monitoring",
+    sub: "Live Visibility",
+    body: "Know what's happening in every room, every moment. Real-time room activity monitoring keeps care teams responsive and gives administrators the situational awareness they need to act fast when it matters.",
+  },
+  {
+    icon: Lock,
+    title: "Anonymized Computer Vision",
+    sub: "Privacy by Design",
+    body: "Our computer vision system monitors resident activity without recording identifiable images — protecting dignity while delivering the safety intelligence your facility depends on. Privacy is not an afterthought; it is built into the architecture.",
+  },
+];
+
+function AIInfrastructure() {
+  return (
+    <section
+      className="relative overflow-hidden py-20 sm:py-28"
+      aria-label="AI monitoring infrastructure"
+      style={{
+        background:
+          "linear-gradient(160deg, oklch(0.20 0.10 332 / 0.97) 0%, oklch(0.26 0.12 332 / 0.97) 100%)",
+      }}
+    >
+      <div
+        className="absolute -right-32 top-0 h-[500px] w-[500px] rounded-full opacity-10 blur-[120px]"
+        style={{ background: "oklch(0.74 0.14 75)" }}
+      />
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="inline-block rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-extrabold uppercase tracking-widest text-accent backdrop-blur-sm">
+            AI Infrastructure
+          </span>
+          <h2 className="mt-4 font-serif text-3xl font-bold text-white sm:text-4xl">
+            The Technology Behind the Care
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-white/70">
+            Advanced monitoring infrastructure — built for residential care homes,
+            designed around resident dignity, and always on.
+          </p>
+        </div>
+
+        <div className="mt-14 grid gap-6 sm:grid-cols-3">
+          {coreTech.map(({ icon: Icon, title, sub, body }) => (
+            <div
+              key={title}
+              className="rounded-2xl border border-white/10 bg-white/8 p-8 backdrop-blur-sm transition-all hover:bg-white/12"
+            >
+              <div className="mb-1 text-[10px] font-extrabold uppercase tracking-widest text-accent/80">
+                {sub}
+              </div>
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/20">
+                <Icon className="h-6 w-6 text-accent" />
+              </div>
+              <h3 className="font-serif text-xl font-bold text-white">{title}</h3>
+              <p className="mt-3 leading-relaxed text-white/65">{body}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -168,83 +243,4 @@ function WhatWeMonitor() {
         </div>
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {monitorItems.map(({ icon: Icon, label }) => (
-            <div
-              key={label}
-              className="flex items-center gap-4 rounded-2xl border border-border bg-white px-6 py-5 shadow-[var(--shadow-card)]"
-            >
-              <div
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
-                style={{ background: "oklch(0.96 0.02 330)" }}
-              >
-                <Icon className="h-5 w-5 text-primary" />
-              </div>
-              <span className="font-semibold text-foreground">{label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Section 3: Built for Texas Residential Care Homes ─── */
-const complianceCallouts = [
-  { title: "Texas DADS-Aligned Protocols", desc: "Every monitoring process maps directly to DADS expectations for residential care oversight." },
-  { title: "Survey-Ready Documentation", desc: "All records are organized and accessible so your facility is prepared when a surveyor arrives." },
-  { title: "Secure, Confidential Reporting", desc: "Reports are encrypted, access-controlled, and handled with strict confidentiality at every step." },
-];
-
-function BuiltForTexas() {
-  return (
-    <section className="bg-white py-20 sm:py-28" aria-label="Built for Texas residential care homes">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-block rounded-full bg-accent/15 px-4 py-1.5 text-xs font-extrabold uppercase tracking-widest text-primary">
-            Texas-Built
-          </span>
-          <h2 className="mt-4 font-serif text-3xl font-bold text-primary sm:text-4xl">
-            Built for Texas Residential Care Homes
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            Our monitoring approach is designed around the specific obligations that Texas residential care operators face. Every element is calibrated to support compliance, protect residents, and give operators the documentation they need when it matters most.
-          </p>
-        </div>
-
-        <div className="mt-14 grid gap-6 sm:grid-cols-3">
-          {complianceCallouts.map(({ title, desc }) => (
-            <div
-              key={title}
-              className="rounded-2xl border border-border bg-white p-8 shadow-[var(--shadow-card)]"
-            >
-              <CheckCircle2 className="h-8 w-8 text-accent" />
-              <h3 className="mt-4 font-serif text-xl font-bold text-primary">{title}</h3>
-              <p className="mt-3 leading-relaxed text-muted-foreground">{desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Page ─── */
-export default function CareMonitoringPage() {
-  return (
-    <>
-      <Navbar />
-      <main>
-        <MonitoringHero />
-        <WhatMonitoringMeans />
-        <WhatWeMonitor />
-        <BuiltForTexas />
-        <PageCTA
-          headline="Want Smarter Oversight for Your Facility?"
-          sub="Talk to our team about monitoring solutions for your DFW care home."
-        />
-      </main>
-      <AIChatWidget />
-      <StickyMobileCTA />
-    </>
-  );
-}
+          {monitorItems.map(({ icon: Icon, lab

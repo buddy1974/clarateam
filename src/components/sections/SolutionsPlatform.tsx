@@ -16,8 +16,8 @@ const MODULES = [
     icon: Users2,
     tag: "Staffing",
     title: "Healthcare Staffing Registry",
-    desc: "Certified CNAs, HHAs, PCAs, and companions — PRN or long-term, matched to your shift within hours.",
-    href: "/services",
+    desc: "Caregivers, CNA, LVN, and Fractional Managers — placed PRN or long-term, matched to your shift within hours.",
+    href: "/#services",
     color: "from-primary/10 to-primary/5",
     iconBg: "bg-primary",
   },
@@ -25,7 +25,7 @@ const MODULES = [
     icon: Home,
     tag: "Placement",
     title: "Residential Placement",
-    desc: "We match families to the right residential care home — based on care needs, location, and culture fit.",
+    desc: "Assisted living facility matching — we place families in the right licensed care home based on needs, location, and budget.",
     href: "/residential-placement",
     color: "from-accent/15 to-accent/5",
     iconBg: "bg-accent",
@@ -34,8 +34,8 @@ const MODULES = [
   {
     icon: Activity,
     tag: "Monitoring",
-    title: "Advanced Care Monitoring",
-    desc: "Smart, privacy-first oversight that keeps residents safe and gives families real-time peace of mind.",
+    title: "Advanced Residential Monitoring",
+    desc: "AI infrastructure with anonymized computer vision — real-time room activity monitoring with privacy by design.",
     href: "/care-monitoring",
     color: "from-emerald-500/10 to-emerald-500/5",
     iconBg: "bg-emerald-600",
@@ -44,7 +44,7 @@ const MODULES = [
     icon: Wrench,
     tag: "Tools",
     title: "Care Tools",
-    desc: "Caregiver workflow tools — MAR/EMR documentation, shift management, and care coordination in one place.",
+    desc: "Personalized care tools for residents — workflow support, documentation, and care coordination in one place.",
     href: "/care-tools",
     color: "from-blue-500/10 to-blue-500/5",
     iconBg: "bg-blue-600",
@@ -53,7 +53,7 @@ const MODULES = [
     icon: BarChart3,
     tag: "Insights",
     title: "Portfolio & Revenue Insights",
-    desc: "Performance dashboards and predictive analytics that protect your facility's revenue and reputation.",
+    desc: "Predictive intelligence and live analytics for better outcomes — performance dashboards that protect your revenue.",
     href: "/insights",
     color: "from-violet-500/10 to-violet-500/5",
     iconBg: "bg-violet-600",
@@ -61,8 +61,8 @@ const MODULES = [
   {
     icon: Shield,
     tag: "Compliance",
-    title: "Compliance System",
-    desc: "End-to-end risk management and regulatory reporting — attorney-authored content, built for Texas care homes.",
+    title: "Third Party Compliance",
+    desc: "Managing risk and regulatory adherence — attorney-authored assessments, custom workflows, and full compliance reporting.",
     href: "/compliance",
     color: "from-rose-500/10 to-rose-500/5",
     iconBg: "bg-rose-600",
@@ -169,9 +169,4 @@ export default function SolutionsPlatform() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-12 text-center text-sm font-semibold text-foreground/50"
         >
-          ✔ All modules. One trusted DFW partner. &nbsp;•&nbsp; ✔ No contracts required.
-        </motion.p>
-      </div>
-    </section>
-  );
-}
+          ✔ All modules. One trusted DFW partner. &nbsp;•

@@ -17,9 +17,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Compliance System | Clara's CareTeam DFW",
+  title: "Third Party Compliance | Clara's CareTeam DFW",
   description:
-    "End-to-end compliance system for DFW residential care homes. Risk management, quality control, provider benchmarking, custom workflows, and attorney-authored risk assessments — all built for Texas care regulations.",
+    "Third party compliance system for DFW residential care homes. Managing risk and regulatory adherence — quality control, provider benchmarking, custom workflows, and attorney-authored risk assessments built for Texas care regulations.",
 };
 
 /* ─── Hero ─── */
@@ -47,7 +47,7 @@ function ComplianceHero() {
 
       <div className="relative z-10 mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
         <span className="inline-block rounded-full bg-accent/15 px-4 py-1.5 text-xs font-extrabold uppercase tracking-widest text-accent">
-          Compliance System
+          Third Party Compliance
         </span>
 
         <h1 className="mt-6 font-serif text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
@@ -294,7 +294,4 @@ export default function CompliancePage() {
         />
       </main>
       <AIChatWidget />
-      <StickyMobileCTA />
-    </>
-  );
-}
+      <Stick

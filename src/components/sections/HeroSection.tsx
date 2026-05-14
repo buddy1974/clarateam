@@ -121,6 +121,18 @@ export default function HeroSection() {
               </a>
             </div>
 
+            {/* Explore Solutions tertiary CTA */}
+            <div className="mt-4">
+              <a
+                href="#solutions"
+                className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white/85 backdrop-blur-sm transition-all hover:bg-white/20 hover:text-white"
+                data-track="hero-explore-solutions"
+              >
+                <Sparkles className="h-3.5 w-3.5 text-accent" />
+                Explore Our Solutions Platform
+              </a>
+            </div>
+
             {/* AI + Voice links */}
             <div className="mt-4 flex flex-wrap items-center gap-4">
               <button
@@ -188,26 +200,4 @@ export default function HeroSection() {
               ))}
             </div>
             <div className="mt-4 rounded-xl bg-accent/20 px-3 py-2 text-center">
-              <span className="text-xs font-bold text-accent">35+ DFW Areas Covered</span>
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-6 left-1/2 -translate-x-1/2"
-        animate={{ y: [0, 6, 0] }}
-        transition={{ repeat: Infinity, duration: 1.4 }}
-        aria-hidden="true"
-      >
-        <a
-          href="#trust-bar"
-          className="flex items-center justify-center text-white/40 transition-colors hover:text-white/70"
-        >
-          <ChevronDown className="h-6 w-6" />
-        </a>
-      </motion.div>
-    </section>
-  );
-}
+              <span className="text-xs font-bold text-accent">35+ DFW Areas Covered</span
