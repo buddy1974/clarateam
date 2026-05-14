@@ -169,9 +169,4 @@ export default function SolutionsPlatform() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-12 text-center text-sm font-semibold text-foreground/50"
         >
-          ✔ All modules. One trusted DFW partner. &nbsp;•&nbsp; ✔ No contracts required.
-        </motion.p>
-      </div>
-    </section>
-  );
-}
+          ✔ All modules. One trusted DFW partner. &nbsp;•

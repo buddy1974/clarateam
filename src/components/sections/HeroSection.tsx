@@ -200,26 +200,4 @@ export default function HeroSection() {
               ))}
             </div>
             <div className="mt-4 rounded-xl bg-accent/20 px-3 py-2 text-center">
-              <span className="text-xs font-bold text-accent">35+ DFW Areas Covered</span>
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-6 left-1/2 -translate-x-1/2"
-        animate={{ y: [0, 6, 0] }}
-        transition={{ repeat: Infinity, duration: 1.4 }}
-        aria-hidden="true"
-      >
-        <a
-          href="#trust-bar"
-          className="flex items-center justify-center text-white/40 transition-colors hover:text-white/70"
-        >
-          <ChevronDown className="h-6 w-6" />
-        </a>
-      </motion.div>
-    </section>
-  );
-}
+              <span className="text-xs font-bold text-accent">35+ DFW Areas Covered</span

@@ -172,6 +172,4 @@ export default function ServicesGrid() {
           </div>
         </motion.div>
       </div>
-    </section>
-  );
-}
+    </sec
