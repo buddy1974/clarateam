@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, ChevronRight } from "lucide-react";
-import logo from "@/assets/logo.png";
 
 const OFFICE = "817-265-5762";
 
@@ -51,8 +50,10 @@ export default function Navbar() {
             } : undefined}
           >
             <Image
-              src={logo}
+              src="/logo2.png"
               alt="Clara's CareTeam"
+              width={240}
+              height={96}
               className="h-24 w-auto transition-opacity hover:opacity-95"
               priority
             />
@@ -148,4 +149,16 @@ export default function Navbar() {
               </a>
               <a
                 href="#emergency"
-                onClick={() => setOpen(false)
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-center gap-2 rounded-full border-2 border-accent bg-accent/10 py-3 text-sm font-bold text-accent transition-all hover:bg-accent hover:text-black active:scale-[0.97]"
+                data-track="mobile-nav-care"
+              >
+                Get Care
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+}
