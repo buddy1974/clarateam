@@ -17,4 +17,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/#contact`,              lastModified: NOW, changeFrequency: "monthly", priority: 0.8 },
 
     // ── Platform pages ───────────────────────────────────────────
-    { url: `${BASE}/platform`,              lastModifie
+    { url: `${BASE}/platform`,              lastModified: NOW, changeFrequency: "monthly", priority: 0.95 },
+    { url: `${BASE}/residential-placement`, lastModified: NOW, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${BASE}/care-monitoring`,       lastModified: NOW, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${BASE}/care-tools`,            lastModified: NOW, changeFrequency: "monthly", priority: 0.80 },
+    { url: `${BASE}/insights`,              lastModified: NOW, changeFrequency: "monthly", priority: 0.80 },
+    { url: `${BASE}/compliance`,            lastModified: NOW, changeFrequency: "monthly", priority: 0.90 },
+  ];
+}

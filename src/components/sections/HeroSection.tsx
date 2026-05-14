@@ -38,12 +38,13 @@ export default function HeroSection() {
       {/* Background */}
       <div className="absolute inset-0">
         <Image
-          src="/hero-bg.png"
+          src="/hero-bg.webp"
           alt="Caregiver assisting elderly at home"
           fill
           priority
           className="object-cover object-center"
           sizes="100vw"
+          quality={85}
         />
         {/* Directional overlay — dense left for text legibility, fades right */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#140a1e]/90 to-[#140a1e]/40" />
@@ -174,7 +175,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 40, x: 20 }}
           animate={{ opacity: 1, y: 0, x: 0 }}
           transition={{ duration: 0.9, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="z-10 hidden lg:absolute lg:right-8 lg:top-1/2 lg:block lg:-translate-y-1/2"
+          className="z-10 hidden lg:absolute lg:right-8 lg:bottom-36 lg:block"
           aria-hidden="true"
         >
           <motion.div
@@ -200,4 +201,26 @@ export default function HeroSection() {
               ))}
             </div>
             <div className="mt-4 rounded-xl bg-accent/20 px-3 py-2 text-center">
-              <span className="text-xs font-bold text-accent">35+ DFW Areas Covered</span
+              <span className="text-xs font-bold text-accent">35+ DFW Areas Covered</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        className="absolute bottom-6 left-1/2 -translate-x-1/2"
+        animate={{ y: [0, 6, 0] }}
+        transition={{ repeat: Infinity, duration: 1.4 }}
+        aria-hidden="true"
+      >
+        <a
+          href="#trust-bar"
+          className="flex items-center justify-center text-white/40 transition-colors hover:text-white/70"
+        >
+          <ChevronDown className="h-6 w-6" />
+        </a>
+      </motion.div>
+    </section>
+  );
+}

@@ -51,7 +51,7 @@ function ComplianceHero() {
         </span>
 
         <h1 className="mt-6 font-serif text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
-          Stay Survey-Ready. Every Shift. Every Day.
+          Compliance-Ready. Every Shift. Every Day.
         </h1>
 
         <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/75">
@@ -165,7 +165,7 @@ function CoreCapabilities() {
 const revenueStats = [
   { value: "100%", label: "Pre-Screened Staff" },
   { value: "TWC", label: "Compliant Payroll" },
-  { value: "Survey-Ready", label: "Every Placement" },
+  { value: "100%", label: "Compliance Ready" },
 ];
 
 function ComplianceAsRevenue() {
@@ -294,4 +294,7 @@ export default function CompliancePage() {
         />
       </main>
       <AIChatWidget />
-      <Stick
+      <StickyMobileCTA />
+    </>
+  );
+}

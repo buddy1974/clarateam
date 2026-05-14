@@ -142,7 +142,7 @@ export default function ServicesGrid() {
                 Compliance Shield™
               </span>
               <h3 className="mt-4 font-serif text-2xl font-bold text-primary sm:text-3xl">
-                Stay Survey-Ready Every Shift
+                Compliance-Ready. Every Shift.
               </h3>
               <p className="mt-3 text-base text-foreground/70">
                 Every placement arrives documentation-complete and competency-verified.
@@ -172,4 +172,6 @@ export default function ServicesGrid() {
           </div>
         </motion.div>
       </div>
-    </sec
+    </section>
+  );
+}

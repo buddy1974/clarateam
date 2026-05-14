@@ -153,7 +153,7 @@ function StaffingSection() {
             <p className="mt-4 text-lg leading-relaxed text-foreground/70">
               Our staffing registry connects residential care homes across DFW with
               fully vetted, compliance-ready caregivers and clinical leaders — exactly
-              when you need them, without contracts or minimums.
+              when you need them, without minimums.
             </p>
             <ul className="mt-6 space-y-3">
               {staffingPoints.map((point) => (
@@ -536,8 +536,7 @@ function ComplianceSection() {
         </h2>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-foreground/70">
           Managing risk and regulatory adherence — end-to-end compliance infrastructure
-          built for Texas residential care homes, so you stay survey-ready every shift,
-          every day.
+          built for Texas residential care homes.
         </p>
 
         {/* 5 required bullets — full cards */}
