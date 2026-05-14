@@ -5,6 +5,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { faqData } from "@/lib/faqData";
 
+// All FAQs flattened for JSON-LD — built at module level (no runtime cost)
+const ALL_FAQS = faqData.flatMap((c) => c.items);
+
+const FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: ALL_FAQS.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.answer,
+    },
+  })),
+};
+
 export default function FAQSection() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -16,7 +32,7 @@ export default function FAQSection() {
 
   const filteredFAQs =
     activeCategory === "all"
-      ? faqData.flatMap((c) => c.items)
+      ? ALL_FAQS
       : faqData.find((c) => c.id === activeCategory)?.items ?? [];
 
   return (
@@ -25,6 +41,11 @@ export default function FAQSection() {
       className="bg-gradient-to-b from-secondary/40 to-white py-16 sm:py-24"
       aria-label="Frequently asked questions"
     >
+      {/* FAQPage JSON-LD — renders Q&A rich snippets in Google */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSON_LD) }}
+      />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -116,22 +137,4 @@ export default function FAQSection() {
                             Need immediate help?
                           </p>
                           <a
-                            href="tel:18172655762"
-                            className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-xs font-bold text-black"
-                            data-track="faq-urgent-call"
-                          >
-                            Call Now — 817-265-5762
-                          </a>
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+                            href="tel:18172

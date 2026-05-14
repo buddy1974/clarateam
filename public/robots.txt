@@ -1,4 +1,2 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://claracareteam.com/sitemap.xml
+# Clara's CareTeam — https://www.claracareteam.com
+# DFW Residential 
