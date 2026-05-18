@@ -59,23 +59,15 @@ export default function HeroSection() {
         />
       </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-20 pt-36 sm:px-6 lg:px-8 lg:pb-28 lg:pt-44">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-20 pt-56 sm:px-6 lg:px-8 lg:pb-28 lg:pt-60">
         <div className="max-w-2xl">
-
-          {/* Badge */}
-          <motion.div variants={fadeUp} initial="hidden" animate="show" custom={0}>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm">
-              <Sparkles className="h-3.5 w-3.5 text-accent" />
-              Clara's CareTeam — DFW Residential Care Staffing
-            </span>
-          </motion.div>
 
           {/* Headline */}
           <motion.h1
             variants={fadeUp}
             initial="hidden"
             animate="show"
-            custom={0.1}
+            custom={0}
             className="mt-6 font-serif text-4xl font-bold leading-[1.06] tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-[4rem]"
           >
             Find Trusted Care for{" "}
@@ -120,6 +112,14 @@ export default function HeroSection() {
               >
                 <Phone className="h-4 w-4" /> Call Now • {OFFICE}
               </a>
+            </div>
+
+            {/* DFW badge — below main CTAs */}
+            <div className="mt-4">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm">
+                <Sparkles className="h-3.5 w-3.5 text-accent" />
+                DFW Residential Care Staffing
+              </span>
             </div>
 
             {/* Explore Solutions tertiary CTA */}
