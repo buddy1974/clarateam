@@ -175,7 +175,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 40, x: 20 }}
           animate={{ opacity: 1, y: 0, x: 0 }}
           transition={{ duration: 0.9, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="z-10 hidden lg:absolute lg:right-8 lg:bottom-36 lg:block"
+          className="z-10 hidden lg:absolute lg:right-8 lg:bottom-10 lg:block"
           aria-hidden="true"
         >
           <motion.div

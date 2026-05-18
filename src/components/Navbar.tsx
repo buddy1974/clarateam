@@ -11,10 +11,11 @@ import {
 const OFFICE = "817-265-5762";
 
 const NAV_LINKS = [
-  { label: "Services",    href: "/#services" },
-  { label: "How It Works", href: "/#process" },
-  { label: "Why Us",      href: "/#why" },
-  { label: "Contact",     href: "/#contact" },
+  { label: "Services",                  href: "/#services" },
+  { label: "Caregiving Opportunities",  href: "/caregiving-opportunities" },
+  { label: "How It Works",              href: "/#process" },
+  { label: "Why Us",                    href: "/#why" },
+  { label: "Contact",                   href: "/#contact" },
 ] as const;
 
 const SOLUTIONS = [
@@ -79,9 +80,9 @@ export default function Navbar() {
             <Image
               src="/logo2.png"
               alt="Clara's CareTeam"
-              width={400}
-              height={160}
-              className="h-40 w-auto transition-opacity hover:opacity-95"
+              width={480}
+              height={192}
+              className="h-48 w-auto transition-opacity hover:opacity-95"
               priority
             />
           </div>
