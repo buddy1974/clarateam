@@ -86,6 +86,16 @@ export const notify = {
       `<a href="https://claracareteam.com/admin/assignments">View Assignments →</a>`
     ),
 
+  newContactForm: (name: string, subject: string, phone?: string, email?: string) =>
+    sendTelegram(
+      `💬 <b>New Website Contact</b>\n\n` +
+      `<b>Name:</b> ${name}\n` +
+      `<b>Subject:</b> ${subject}\n` +
+      (phone ? `<b>Phone:</b> ${phone}\n` : "") +
+      (email ? `<b>Email:</b> ${email}\n` : "") +
+      `\n<a href="https://claracareteam.com/admin/inbox">View Inbox →</a>`
+    ),
+
   // ── Phase 4: Business events ─────────────────────────────────────────────
 
   invoiceGenerated: (clientName: string, invoiceNo: string, total: string) =>

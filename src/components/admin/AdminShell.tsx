@@ -2,11 +2,12 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   LayoutDashboard, Users, Building2, ClipboardList,
   Mail, Calendar, Pill, Receipt, Palette, LogOut,
   Upload, ClipboardCheck, Search, Heart,
-  Activity, AlertTriangle, FileText, ShieldCheck,
+  Activity, AlertTriangle, FileText, ShieldCheck, Sparkles,
 } from "lucide-react";
 
 // ── Navigation config ──────────────────────────────────────────────
@@ -18,17 +19,19 @@ const PRIMARY_NAV = [
   { href: "/admin/search",    label: "Search",     icon: Search },
   { href: "/admin/operations", label: "Operations", icon: Activity },
   { href: "/admin/alerts",     label: "Alerts",     icon: AlertTriangle },
-  { href: "/admin/recipients", label: "Recipients", icon: Heart },
-  { href: "/admin/staff",      label: "Staff",      icon: Users },
-  { href: "/admin/clients",    label: "Clients",    icon: Building2 },
-  { href: "/admin/requests",  label: "Requests",   icon: ClipboardList },
-  { href: "/admin/inbox",     label: "Inbox",      icon: Mail },
-  { href: "/admin/rota",      label: "Rota",       icon: Calendar },
-  { href: "/admin/medication",label: "Medication", icon: Pill },
-  { href: "/admin/billing",    label: "Billing",     icon: Receipt },
-  { href: "/admin/reports",   label: "Reports",    icon: FileText },
-  { href: "/admin/compliance",label: "Compliance", icon: ShieldCheck },
-  { href: "/admin/cms",       label: "CMS",        icon: Palette },
+  { href: "/admin/recipients",  label: "Recipients",  icon: Heart },
+  { href: "/admin/care-plans",  label: "Care Plans",  icon: ClipboardCheck },
+  { href: "/admin/staff",       label: "Staff",       icon: Users },
+  { href: "/admin/clients",     label: "Clients",     icon: Building2 },
+  { href: "/admin/requests",    label: "Requests",    icon: ClipboardList },
+  { href: "/admin/inbox",       label: "Inbox",       icon: Mail },
+  { href: "/admin/rota",        label: "Rota",        icon: Calendar },
+  { href: "/admin/medication",  label: "Medication",  icon: Pill },
+  { href: "/admin/billing",     label: "Billing",     icon: Receipt },
+  { href: "/admin/reports",     label: "Reports",     icon: FileText },
+  { href: "/admin/compliance",  label: "Compliance",  icon: ShieldCheck },
+  { href: "/admin/ai",          label: "AI Tools",    icon: Sparkles },
+  { href: "/admin/cms",         label: "CMS",         icon: Palette },
 ] as const;
 
 const SOON_NAV: never[] = [];
@@ -41,16 +44,18 @@ const PAGE_TITLE: Record<string, string> = {
   "/admin/operations":  "Operations",
   "/admin/alerts":      "Alerts",
   "/admin/recipients":  "Recipients",
+  "/admin/care-plans":  "Care Plans",
   "/admin/staff":       "Staff",
-  "/admin/clients":    "Clients",
-  "/admin/requests":   "Requests",
-  "/admin/inbox":      "Inbox",
-  "/admin/rota":       "Rota",
-  "/admin/medication": "Medication",
+  "/admin/clients":     "Clients",
+  "/admin/requests":    "Requests",
+  "/admin/inbox":       "Inbox",
+  "/admin/rota":        "Rota",
+  "/admin/medication":  "Medication",
   "/admin/billing":     "Billing",
-  "/admin/reports":    "Reports",
-  "/admin/compliance": "Compliance",
-  "/admin/cms":        "CMS",
+  "/admin/reports":     "Reports",
+  "/admin/compliance":  "Compliance",
+  "/admin/ai":          "AI Tools",
+  "/admin/cms":         "CMS",
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -81,17 +86,26 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-56 flex-col border-r border-gray-200 bg-white md:flex">
 
         {/* Brand */}
-        <div className="flex h-16 shrink-0 items-center gap-3 border-b border-gray-100 px-5">
-          <div
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white"
-            style={{ background: "oklch(0.30 0.14 332)" }}
-          >
-            C
-          </div>
-          <div className="min-w-0">
-            <div className="truncate text-sm font-bold text-gray-900">ClaraCare</div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-amber-500">OS</div>
-          </div>
+        <div className="flex h-16 shrink-0 items-center border-b border-gray-100 px-4">
+          <Link href="/admin/dashboard" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+            <div
+              className="inline-flex items-center rounded-2xl px-2.5 py-1"
+              style={{
+                background: "oklch(0.74 0.14 75)",
+                boxShadow: "0 2px 12px oklch(0.74 0.14 75 / 0.40)",
+              }}
+            >
+              <Image
+                src="/logo2.png"
+                alt="Clara's CareTeam"
+                width={120}
+                height={48}
+                className="h-7 w-auto"
+                priority
+              />
+            </div>
+            <span className="text-[9px] font-extrabold uppercase tracking-widest text-amber-500">OS</span>
+          </Link>
         </div>
 
         {/* Primary nav */}
@@ -139,15 +153,21 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       <div className="flex flex-1 flex-col md:ml-56">
 
         {/* Mobile top bar */}
-        <header className="sticky top-0 z-40 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 md:hidden">
+        <header className="sticky top-0 z-40 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-2 md:hidden">
           <div className="flex items-center gap-2.5">
             <div
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white"
-              style={{ background: "oklch(0.30 0.14 332)" }}
+              className="inline-flex items-center rounded-xl px-2 py-1"
+              style={{ background: "oklch(0.74 0.14 75)" }}
             >
-              C
+              <Image
+                src="/logo2.png"
+                alt="Clara's CareTeam"
+                width={80}
+                height={32}
+                className="h-6 w-auto"
+              />
             </div>
-            <span className="font-bold text-gray-900">{title}</span>
+            <span className="font-bold text-gray-700 text-sm">{title}</span>
           </div>
           <button
             onClick={logout}

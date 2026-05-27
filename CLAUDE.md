@@ -6,7 +6,7 @@ Run this single command to get everything ready:
 
 ```
 git add -A
-git commit -m "Fix: remove unused ts-expect-error in invoices route — restore build"
+git commit -m "feat: Care Plans, AI Tools, UI polish — logo, dashboard, notifications"
 git push
 ```
 
@@ -23,6 +23,7 @@ After pushing, remind the user to add these in Vercel → Project Settings → E
 - IMAP_PASS          — password for info@claracareteam.com
 - ADMIN_PIN          — PIN to access /admin (e.g. clara2025)
 - ADMIN_SECRET       — any long random string (32+ chars)
+- ANTHROPIC_API_KEY  — from console.anthropic.com (for AI Tools in /admin/ai)
 
 ## Project context
 

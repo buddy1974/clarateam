@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
+import { Eye, EyeOff, Shield } from "lucide-react";
 
 export default function AdminLogin() {
-  const [pin, setPin] = useState("");
-  const [show, setShow] = useState(false);
-  const [error, setError] = useState("");
+  const [pin, setPin]       = useState("");
+  const [show, setShow]     = useState(false);
+  const [error, setError]   = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -30,53 +31,90 @@ export default function AdminLogin() {
 
   return (
     <div
-      className="flex min-h-screen items-center justify-center px-4"
+      className="flex min-h-screen flex-col items-center justify-center px-4"
       style={{
-        background: "linear-gradient(135deg, oklch(0.16 0.10 332) 0%, oklch(0.22 0.12 332) 100%)",
+        background: "linear-gradient(160deg, oklch(0.12 0.10 332) 0%, oklch(0.20 0.14 332) 55%, oklch(0.16 0.10 332) 100%)",
       }}
     >
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/20 backdrop-blur">
-            <Lock className="h-8 w-8 text-accent" />
+      {/* Ambient glow */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-30"
+        style={{
+          background: "radial-gradient(ellipse 60% 40% at 50% 30%, oklch(0.74 0.14 75 / 0.25), transparent)",
+        }}
+      />
+
+      <div className="relative w-full max-w-sm">
+        {/* Logo */}
+        <div className="mb-8 flex flex-col items-center">
+          <div
+            className="inline-flex items-center rounded-3xl px-5 py-2 shadow-2xl"
+            style={{
+              background: "oklch(0.74 0.14 75)",
+              boxShadow: "0 0 60px oklch(0.74 0.14 75 / 0.50), 0 16px 40px rgba(0,0,0,0.60)",
+            }}
+          >
+            <Image
+              src="/logo2.png"
+              alt="Clara's CareTeam"
+              width={240}
+              height={96}
+              className="h-14 w-auto"
+              priority
+            />
           </div>
-          <h1 className="mt-4 font-serif text-2xl font-bold text-white">Admin Access</h1>
-          <p className="mt-1 text-sm text-white/55">Clara&apos;s CareTeam Operations</p>
+          <div className="mt-4 flex items-center gap-2">
+            <Shield className="h-3.5 w-3.5 text-amber-400/70" />
+            <span className="text-xs font-bold uppercase tracking-widest text-white/50">Secure Admin Access</span>
+          </div>
         </div>
 
+        {/* Card */}
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm"
+          className="rounded-2xl border border-white/10 bg-white/8 p-8 shadow-2xl backdrop-blur-xl"
+          style={{ background: "rgba(255,255,255,0.07)" }}
         >
-          <label className="mb-1.5 block text-sm font-semibold text-white/70">PIN</label>
+          <h2 className="mb-5 text-center font-serif text-xl font-bold text-white">ClaraCare OS</h2>
+
+          <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-white/50">PIN</label>
           <div className="relative">
             <input
               type={show ? "text" : "password"}
               value={pin}
               onChange={(e) => setPin(e.target.value)}
               placeholder="Enter your PIN"
-              className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 pr-10 text-sm text-white placeholder:text-white/30 outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
+              className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3 pr-10 text-sm text-white placeholder:text-white/25 outline-none focus:border-amber-400/60 focus:ring-2 focus:ring-amber-400/15"
               autoFocus
             />
             <button
               type="button"
               onClick={() => setShow((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/35 transition-colors hover:text-white/60"
             >
               {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
 
-          {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
+          {error && (
+            <p className="mt-3 rounded-lg bg-red-500/15 px-3 py-2 text-center text-sm font-semibold text-red-300">
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"
             disabled={loading || !pin}
-            className="mt-5 w-full rounded-full bg-accent py-3 text-sm font-extrabold text-black transition-all hover:brightness-105 disabled:opacity-50"
+            className="mt-5 w-full rounded-full py-3.5 text-sm font-extrabold text-black transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
+            style={{ background: "oklch(0.74 0.14 75)" }}
           >
-            {loading ? "Checking…" : "Enter"}
+            {loading ? "Verifying…" : "Enter Operations Center"}
           </button>
         </form>
+
+        <p className="mt-5 text-center text-[11px] text-white/25">
+          Clara&apos;s CareTeam · Operations Platform · Secure Access
+        </p>
       </div>
     </div>
   );

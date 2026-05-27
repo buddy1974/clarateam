@@ -43,5 +43,4 @@ dist-ssr
 out/
 
 # TypeScript
-tsconfig.tsbuildinfo
-*.tsbuildinfo
+tsco

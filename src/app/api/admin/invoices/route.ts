@@ -190,5 +190,16 @@ export async function PATCH(req: NextRequest) {
     .where(eq(invoices.id, id))
     .returning();
 
+  // Telegram: fire when invoice marked paid
+  if (status === "paid" && updated) {
+    const clientRow = await db.select({ name: clients.name }).from(clients)
+      .where(eq(clients.id, updated.clientId)).then((r) => r[0]);
+    notify.invoicePaid(
+      clientRow?.name ?? `Client #${updated.clientId}`,
+      updated.invoiceNo,
+      updated.total,
+    ).catch(console.error);
+  }
+
   return NextResponse.json(updated);
 }
