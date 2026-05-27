@@ -5,9 +5,8 @@
 Run this single command to get everything ready:
 
 ```
-npm install
 git add -A
-git commit -m "Admin platform: DB schema, caregiver form, pipeline, Telegram, inbox"
+git commit -m "Fix: remove broken Drizzle query in sync-inbox route"
 git push
 ```
 

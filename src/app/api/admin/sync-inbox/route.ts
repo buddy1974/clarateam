@@ -68,20 +68,17 @@ export async function GET(req: NextRequest) {
             ? "care_request"
             : "general";
 
-        // Upsert — skip if already stored
-        const existing = await db.select({ id: emails.id }).from(emails)
-          .where(db.$with("check").as(
-            db.select().from(emails)
-          ));
+        // Insert — onConflictDoNothing handles duplicate UIDs
+        const result = await db
+          .insert(emails)
+          .values({ uid, sender: from as string, subject, bodyText, receivedAt, tag })
+          .onConflictDoNothing()
+          .returning({ id: emails.id });
 
-        // Simple insert with conflict ignore pattern
-        try {
-          await db.insert(emails).values({ uid, sender: from, subject, bodyText, receivedAt, tag }).onConflictDoNothing();
+        // Only notify if this was a new email (not a duplicate)
+        if (result.length > 0) {
           synced++;
-          // Notify on each new email
           await notify.newEmail(from as string, subject);
-        } catch {
-          // uid already exists — skip
         }
       }
     } finally {
