@@ -121,6 +121,9 @@ export const carePlans = pgTable("care_plans", {
   id:              serial("id").primaryKey(),
   careRecipientId: integer("care_recipient_id"), // back-filled after care_recipient creation
   notes:           text("notes"),
+  conditions:      text("conditions"),           // medical conditions (free text)
+  allergies:       text("allergies"),            // known allergies (free text)
+  dietType:        text("diet_type"),            // quick diet ref
   createdAt:       timestamp("created_at").defaultNow().notNull(),
   updatedAt:       timestamp("updated_at").defaultNow().notNull(),
 });
@@ -402,4 +405,50 @@ export const users = pgTable("users", {
   name:      text("name").notNull(),
   role:      userRoleEnum("role").notNull().default("operator"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ══════════════════════════════════════════════════════════════════════════
+// ── PHASE 2 TABLES — CARE CORE ────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+
+// ── Table: diet_plans ─────────────────────────────────────────────────────
+// One active diet plan per care recipient
+
+export const dietPlans = pgTable("diet_plans", {
+  id:              serial("id").primaryKey(),
+  careRecipientId: integer("care_recipient_id").notNull().references(() => careRecipients.id),
+  dietType:        text("diet_type"),        // "regular" | "soft" | "pureed" | "diabetic" | "low-sodium" | "low-fat" | "other"
+  restrictions:    text("restrictions"),    // free text — allergy/intolerance notes
+  notes:           text("notes"),
+  active:          boolean("active").notNull().default(true),
+  createdAt:       timestamp("created_at").defaultNow().notNull(),
+  updatedAt:       timestamp("updated_at").defaultNow().notNull(),
+});
+
+// ── Table: care_tasks ─────────────────────────────────────────────────────
+// Task templates assigned to a care recipient (reusable per-shift or daily)
+
+export const careTasks = pgTable("care_tasks", {
+  id:              serial("id").primaryKey(),
+  careRecipientId: integer("care_recipient_id").notNull().references(() => careRecipients.id),
+  title:           text("title").notNull(),
+  description:     text("description"),
+  frequency:       text("frequency").notNull().default("daily"),  // "per_shift" | "daily" | "weekly"
+  active:          boolean("active").notNull().default(true),
+  createdAt:       timestamp("created_at").defaultNow().notNull(),
+  updatedAt:       timestamp("updated_at").defaultNow().notNull(),
+});
+
+// ── Table: task_logs ──────────────────────────────────────────────────────
+// Execution records — one row per task per shift/day
+
+export const taskLogs = pgTable("task_logs", {
+  id:              serial("id").primaryKey(),
+  taskId:          integer("task_id").notNull().references(() => careTasks.id),
+  careRecipientId: integer("care_recipient_id").notNull().references(() => careRecipients.id),
+  staffId:         integer("staff_id").references(() => staff.id),
+  status:          text("status").notNull().default("done"),   // "done" | "skipped"
+  notes:           text("notes"),
+  logDate:         text("log_date").notNull(),                 // YYYY-MM-DD
+  createdAt:       timestamp("created_at").defaultNow().notNull(),
 });
