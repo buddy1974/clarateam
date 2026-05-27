@@ -40,26 +40,39 @@ export const invoiceStatusEnum = pgEnum("invoice_status", [
   "draft", "sent", "paid", "overdue", "cancelled",
 ]);
 
+// ── Phase 1 Enums ──────────────────────────────────────────────────────────
+
+export const draftTypeEnum = pgEnum("draft_type", [
+  "intake", "medication", "report", "care_plan", "incident", "shift_note",
+]);
+
+export const draftStatusEnum = pgEnum("draft_status", [
+  "draft", "pending", "approved", "rejected",
+]);
+
+export const notifStatusEnum = pgEnum("notif_status", ["read", "unread"]);
+
+export const userRoleEnum = pgEnum("user_role", ["operator", "validator"]);
 
 // ── Table: applicants ──────────────────────────────────────────────────────
 // Caregiver job applications submitted via /caregiving-opportunities
 
 export const applicants = pgTable("applicants", {
-  id:           serial("id").primaryKey(),
-  name:         text("name").notNull(),
-  email:        text("email").notNull(),
-  phone:        text("phone").notNull(),
-  role:         roleEnum("role").notNull(),
-  availability: shiftEnum("availability").array().notNull().default([]),
-  experience:   text("experience"),          // years / free text
-  certifications: text("certifications"),    // comma separated
-  message:      text("message"),
-  resumeUrl:    text("resume_url"),
-  status:       applicantStatusEnum("status").notNull().default("applied"),
-  notes:        text("notes"),               // internal admin notes
-  source:       text("source").default("website"),
-  createdAt:    timestamp("created_at").defaultNow().notNull(),
-  updatedAt:    timestamp("updated_at").defaultNow().notNull(),
+  id:             serial("id").primaryKey(),
+  name:           text("name").notNull(),
+  email:          text("email").notNull(),
+  phone:          text("phone").notNull(),
+  role:           roleEnum("role").notNull(),
+  availability:   shiftEnum("availability").array().notNull().default([]),
+  experience:     text("experience"),
+  certifications: text("certifications"),
+  message:        text("message"),
+  resumeUrl:      text("resume_url"),
+  status:         applicantStatusEnum("status").notNull().default("applied"),
+  notes:          text("notes"),
+  source:         text("source").default("website"),
+  createdAt:      timestamp("created_at").defaultNow().notNull(),
+  updatedAt:      timestamp("updated_at").defaultNow().notNull(),
 });
 
 // ── Table: staff ───────────────────────────────────────────────────────────
@@ -90,7 +103,7 @@ export const staff = pgTable("staff", {
 export const clients = pgTable("clients", {
   id:          serial("id").primaryKey(),
   name:        text("name").notNull(),
-  type:        text("type").notNull().default("facility"),   // facility | family
+  type:        text("type").notNull().default("facility"),
   contactName: text("contact_name"),
   email:       text("email"),
   phone:       text("phone"),
@@ -101,13 +114,29 @@ export const clients = pgTable("clients", {
   createdAt:   timestamp("created_at").defaultNow().notNull(),
 });
 
+// ── Table: care_plans ──────────────────────────────────────────────────────
+// Defined before care_recipients to allow FK reference
+
+export const carePlans = pgTable("care_plans", {
+  id:              serial("id").primaryKey(),
+  careRecipientId: integer("care_recipient_id"), // back-filled after care_recipient creation
+  notes:           text("notes"),
+  createdAt:       timestamp("created_at").defaultNow().notNull(),
+  updatedAt:       timestamp("updated_at").defaultNow().notNull(),
+});
+
 // ── Table: care_recipients ─────────────────────────────────────────────────
-// Individual patients / residents under a client org
+// Individual patients / residents
 
 export const careRecipients = pgTable("care_recipients", {
   id:                    serial("id").primaryKey(),
   clientId:              integer("client_id").references(() => clients.id),
+  // Legacy combined field — kept for backward compat
   name:                  text("name").notNull(),
+  // Phase 1: structured name + demographics
+  firstName:             text("first_name"),
+  lastName:              text("last_name"),
+  gender:                text("gender"),           // "male" | "female" | "other"
   dateOfBirth:           text("date_of_birth"),
   address:               text("address"),
   careLevel:             careLevelEnum("care_level"),
@@ -116,13 +145,14 @@ export const careRecipients = pgTable("care_recipients", {
   emergencyContactName:  text("emergency_contact_name"),
   emergencyContactPhone: text("emergency_contact_phone"),
   notes:                 text("notes"),
-  active:                boolean("active").notNull().default(true),
+  status:                text("status").notNull().default("active"),  // "active" | "inactive"
+  carePlanId:            integer("care_plan_id").references(() => carePlans.id),
+  active:                boolean("active").notNull().default(true),   // kept for compat
   createdAt:             timestamp("created_at").defaultNow().notNull(),
   updatedAt:             timestamp("updated_at").defaultNow().notNull(),
 });
 
 // ── Table: staff_assignments ───────────────────────────────────────────────
-// Active caregiver ↔ patient pairings
 
 export const staffAssignments = pgTable("staff_assignments", {
   id:           serial("id").primaryKey(),
@@ -139,17 +169,16 @@ export const staffAssignments = pgTable("staff_assignments", {
 });
 
 // ── Table: shifts ─────────────────────────────────────────────────────────
-// Scheduled work shifts: caregiver → patient → date + time
 
 export const shifts = pgTable("shifts", {
   id:          serial("id").primaryKey(),
   staffId:     integer("staff_id").notNull().references(() => staff.id),
   recipientId: integer("recipient_id").references(() => careRecipients.id),
   clientId:    integer("client_id").references(() => clients.id),
-  shiftDate:   text("shift_date").notNull(),   // YYYY-MM-DD
-  startTime:   text("start_time").notNull(),   // HH:MM (24h)
-  endTime:     text("end_time").notNull(),      // HH:MM (24h)
-  hours:       numeric("hours", { precision: 4, scale: 2 }), // auto-calculated
+  shiftDate:   text("shift_date").notNull(),
+  startTime:   text("start_time").notNull(),
+  endTime:     text("end_time").notNull(),
+  hours:       numeric("hours", { precision: 4, scale: 2 }),
   status:      shiftStatusEnum("status").notNull().default("scheduled"),
   notes:       text("notes"),
   createdAt:   timestamp("created_at").defaultNow().notNull(),
@@ -157,14 +186,13 @@ export const shifts = pgTable("shifts", {
 });
 
 // ── Table: care_requests ───────────────────────────────────────────────────
-// Incoming care needs submitted by families / facilities
 
 export const careRequests = pgTable("care_requests", {
   id:           serial("id").primaryKey(),
   contactName:  text("contact_name").notNull(),
   contactEmail: text("contact_email").notNull(),
   contactPhone: text("contact_phone").notNull(),
-  facilityName: text("facility_name"),        // null = private family
+  facilityName: text("facility_name"),
   address:      text("address"),
   careType:     roleEnum("care_type").notNull(),
   hoursPerWeek: integer("hours_per_week"),
@@ -179,7 +207,6 @@ export const careRequests = pgTable("care_requests", {
 });
 
 // ── Table: assignments ─────────────────────────────────────────────────────
-// Links a caregiver to a care request / shift
 
 export const assignments = pgTable("assignments", {
   id:            serial("id").primaryKey(),
@@ -188,41 +215,39 @@ export const assignments = pgTable("assignments", {
   startDate:     text("start_date"),
   endDate:       text("end_date"),
   hoursPerWeek:  integer("hours_per_week"),
-  rate:          text("rate"),              // hourly rate string
+  rate:          text("rate"),
   notes:         text("notes"),
   active:        boolean("active").notNull().default(true),
   createdAt:     timestamp("created_at").defaultNow().notNull(),
 });
 
 // ── Table: emails ──────────────────────────────────────────────────────────
-// Cached inbox from info@claracareteam.com (pulled via IMAP)
 
 export const emails = pgTable("emails", {
   id:         serial("id").primaryKey(),
-  uid:        text("uid").unique().notNull(),   // IMAP UID — prevents duplicates
+  uid:        text("uid").unique().notNull(),
   sender:     text("sender").notNull(),
   subject:    text("subject"),
   bodyText:   text("body_text"),
   receivedAt: timestamp("received_at"),
-  tag:        text("tag").default("general"),   // applicant | care_request | general
+  tag:        text("tag").default("general"),
   isRead:     boolean("is_read").notNull().default(false),
   createdAt:  timestamp("created_at").defaultNow().notNull(),
 });
 
 // ── Table: medications ─────────────────────────────────────────────────────
-// Prescriptions / OTC meds per care recipient
 
 export const medications = pgTable("medications", {
   id:          serial("id").primaryKey(),
   recipientId: integer("recipient_id").notNull().references(() => careRecipients.id),
   name:        text("name").notNull(),
-  dosage:      text("dosage").notNull(),         // e.g. "10mg"
-  frequency:   text("frequency").notNull(),      // e.g. "twice daily"
-  route:       text("route").notNull().default("oral"), // oral | topical | injection | inhaled
-  times:       text("times").array().notNull().default([]), // ["08:00","20:00"]
+  dosage:      text("dosage").notNull(),
+  frequency:   text("frequency").notNull(),
+  route:       text("route").notNull().default("oral"),
+  times:       text("times").array().notNull().default([]),
   prescriber:  text("prescriber"),
   startDate:   text("start_date"),
-  endDate:     text("end_date"),                // null = ongoing
+  endDate:     text("end_date"),
   notes:       text("notes"),
   active:      boolean("active").notNull().default(true),
   createdAt:   timestamp("created_at").defaultNow().notNull(),
@@ -230,14 +255,13 @@ export const medications = pgTable("medications", {
 });
 
 // ── Table: medication_logs ──────────────────────────────────────────────────
-// Administration records — one row per dose given/missed
 
 export const medicationLogs = pgTable("medication_logs", {
   id:             serial("id").primaryKey(),
   medicationId:   integer("medication_id").notNull().references(() => medications.id),
   staffId:        integer("staff_id").references(() => staff.id),
-  scheduledTime:  text("scheduled_time").notNull(), // HH:MM
-  logDate:        text("log_date").notNull(),        // YYYY-MM-DD
+  scheduledTime:  text("scheduled_time").notNull(),
+  logDate:        text("log_date").notNull(),
   status:         medLogStatusEnum("status").notNull().default("given"),
   administeredAt: timestamp("administered_at"),
   notes:          text("notes"),
@@ -245,16 +269,15 @@ export const medicationLogs = pgTable("medication_logs", {
 });
 
 // ── Table: invoices ────────────────────────────────────────────────────────
-// Client billing invoices — generated from completed shifts
 
 export const invoices = pgTable("invoices", {
   id:         serial("id").primaryKey(),
   clientId:   integer("client_id").notNull().references(() => clients.id),
-  invoiceNo:  text("invoice_no").notNull().unique(),   // INV-2026-001
-  periodFrom: text("period_from").notNull(),           // YYYY-MM-DD
+  invoiceNo:  text("invoice_no").notNull().unique(),
+  periodFrom: text("period_from").notNull(),
   periodTo:   text("period_to").notNull(),
   status:     invoiceStatusEnum("status").notNull().default("draft"),
-  subtotal:   numeric("subtotal", { precision: 10, scale: 2 }).notNull().default("0"),
+  subtotal:   numeric("subtotal",  { precision: 10, scale: 2 }).notNull().default("0"),
   taxRate:    numeric("tax_rate",  { precision: 5,  scale: 2 }).notNull().default("0"),
   taxAmount:  numeric("tax_amount",{ precision: 10, scale: 2 }).notNull().default("0"),
   total:      numeric("total",     { precision: 10, scale: 2 }).notNull().default("0"),
@@ -266,7 +289,6 @@ export const invoices = pgTable("invoices", {
 });
 
 // ── Table: invoice_lines ───────────────────────────────────────────────────
-// One row per staff member per invoice
 
 export const invoiceLines = pgTable("invoice_lines", {
   id:          serial("id").primaryKey(),
@@ -281,7 +303,6 @@ export const invoiceLines = pgTable("invoice_lines", {
 });
 
 // ── Table: site_settings ──────────────────────────────────────────────────
-// Key-value store for public website content
 
 export const siteSettings = pgTable("site_settings", {
   key:       text("key").primaryKey(),
@@ -318,12 +339,67 @@ export const faqs = pgTable("faqs", {
 });
 
 // ── Table: telegram_subs ───────────────────────────────────────────────────
-// Chat IDs that receive notifications
 
 export const telegramSubs = pgTable("telegram_subs", {
   id:        serial("id").primaryKey(),
   chatId:    text("chat_id").unique().notNull(),
-  label:     text("label"),    // "Jessica" | "Kevin" | "Group"
+  label:     text("label"),
   active:    boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ══════════════════════════════════════════════════════════════════════════
+// ── PHASE 1 TABLES ────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+
+// ── Table: drafts ──────────────────────────────────────────────────────────
+// Staging area — ALL data enters here before becoming a final entity
+
+export const drafts = pgTable("drafts", {
+  id:              serial("id").primaryKey(),
+  type:            draftTypeEnum("type").notNull().default("intake"),
+  relatedEntityId: integer("related_entity_id"),       // set on approval
+  rawData:         text("raw_data"),                   // JSON string — raw extracted input
+  aiData:          text("ai_data"),                    // JSON string — AI-structured output
+  status:          draftStatusEnum("status").notNull().default("draft"),
+  version:         integer("version").notNull().default(1),
+  parentDraftId:   integer("parent_draft_id"),         // for versioned edits
+  createdBy:       text("created_by").notNull().default("admin"),
+  createdAt:       timestamp("created_at").defaultNow().notNull(),
+  updatedAt:       timestamp("updated_at").defaultNow().notNull(),
+});
+
+// ── Table: audit_logs ─────────────────────────────────────────────────────
+// Immutable log — every approve/reject/edit recorded here
+
+export const auditLogs = pgTable("audit_logs", {
+  id:          serial("id").primaryKey(),
+  entityType:  text("entity_type").notNull(),         // "draft" | "care_recipient" | ...
+  entityId:    integer("entity_id").notNull(),
+  action:      text("action").notNull(),              // "create" | "update" | "approve" | "reject" | "pending"
+  performedBy: text("performed_by").notNull().default("admin"),
+  meta:        text("meta"),                          // JSON string — extra context
+  timestamp:   timestamp("timestamp").defaultNow().notNull(),
+});
+
+// ── Table: notifications ───────────────────────────────────────────────────
+// In-app notifications + Telegram trigger log
+
+export const notifications = pgTable("notifications", {
+  id:        serial("id").primaryKey(),
+  type:      text("type").notNull().default("info"),  // "info" | "action" | "alert"
+  message:   text("message").notNull(),
+  status:    notifStatusEnum("status").notNull().default("unread"),
+  relatedId: integer("related_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// ── Table: users ───────────────────────────────────────────────────────────
+// Minimal role system: operator (creates drafts) / validator (approves)
+
+export const users = pgTable("users", {
+  id:        serial("id").primaryKey(),
+  name:      text("name").notNull(),
+  role:      userRoleEnum("role").notNull().default("operator"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

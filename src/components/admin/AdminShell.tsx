@@ -5,26 +5,33 @@ import Link from "next/link";
 import {
   LayoutDashboard, Users, Building2, ClipboardList,
   Mail, Calendar, Pill, Receipt, Palette, LogOut,
+  Upload, ClipboardCheck, Search,
 } from "lucide-react";
 
 // ── Navigation config ──────────────────────────────────────────────
 
 const PRIMARY_NAV = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/intake",    label: "Intake",     icon: Upload },
+  { href: "/admin/drafts",    label: "Drafts",     icon: ClipboardCheck },
+  { href: "/admin/search",    label: "Search",     icon: Search },
   { href: "/admin/staff",     label: "Staff",      icon: Users },
   { href: "/admin/clients",   label: "Clients",    icon: Building2 },
   { href: "/admin/requests",  label: "Requests",   icon: ClipboardList },
   { href: "/admin/inbox",     label: "Inbox",      icon: Mail },
-  { href: "/admin/rota",       label: "Rota",       icon: Calendar },
-  { href: "/admin/medication", label: "Medication", icon: Pill },
+  { href: "/admin/rota",      label: "Rota",       icon: Calendar },
+  { href: "/admin/medication",label: "Medication", icon: Pill },
   { href: "/admin/billing",   label: "Billing",    icon: Receipt },
-  { href: "/admin/cms",      label: "CMS",        icon: Palette },
+  { href: "/admin/cms",       label: "CMS",        icon: Palette },
 ] as const;
 
 const SOON_NAV: never[] = [];
 
 const PAGE_TITLE: Record<string, string> = {
   "/admin/dashboard":  "Dashboard",
+  "/admin/intake":     "Intake",
+  "/admin/drafts":     "Drafts",
+  "/admin/search":     "Search",
   "/admin/staff":      "Staff",
   "/admin/clients":    "Clients",
   "/admin/requests":   "Requests",
