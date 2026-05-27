@@ -87,8 +87,12 @@ export default function OperationsPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const res = await fetch(`/api/admin/operations?date=${date}`);
-    if (res.ok) setData(await res.json());
+    // Run overdue detection in parallel with main data fetch
+    const [opsRes] = await Promise.all([
+      fetch(`/api/admin/operations?date=${date}`),
+      fetch("/api/admin/alerts/overdue", { method: "POST" }).catch(() => null),
+    ]);
+    if (opsRes.ok) setData(await opsRes.json());
     setLoading(false);
   }, [date]);
 

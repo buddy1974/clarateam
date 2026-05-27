@@ -15,7 +15,6 @@ export async function GET(req: NextRequest) {
   const date        = searchParams.get("date");
   const taskId      = searchParams.get("taskId");
 
-  // By recipient — resolve task IDs first
   if (recipientId) {
     const tasks = await db.select({ id: careTasks.id }).from(careTasks)
       .where(eq(careTasks.careRecipientId, parseInt(recipientId, 10)));
@@ -33,7 +32,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(rows);
   }
 
-  // By individual task
   const conditions = [];
   if (taskId) conditions.push(eq(taskLogs.taskId, parseInt(taskId, 10)));
   if (date)   conditions.push(eq(taskLogs.logDate, date));
@@ -56,45 +54,52 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "taskId, careRecipientId, logDate required" }, { status: 400 });
   }
 
-  const [created] = await db.insert(taskLogs).values({
-    taskId:          parseInt(taskId, 10),
-    careRecipientId: parseInt(careRecipientId, 10),
-    staffId:         staffId ?? null,
-    shiftId:         shiftId ?? null,
-    status:          status  ?? "done",
-    notes:           notes   ?? null,
-    logDate,
-  }).returning();
+  // ── Accountability enforcement ────────────────────────────────────────────
+  if (!shiftId) {
+    return NextResponse.json(
+      { error: "shiftId is required for accountability" },
+      { status: 400 }
+    );
+  }
 
-  // ── Alert engine: task skipped ────────────────────────────────────────────
-  if (status === "skipped") {
-    try {
-      // Get task title and recipient name for the alert message
-      const [task] = await db.select({ title: careTasks.title }).from(careTasks)
-        .where(eq(careTasks.id, parseInt(taskId, 10)));
+  // ── Resolve names for alert message ──────────────────────────────────────
+  const [task]      = await db.select({ title: careTasks.title }).from(careTasks)
+    .where(eq(careTasks.id, parseInt(taskId, 10)));
+  const [recipient] = await db.select({ name: careRecipients.name }).from(careRecipients)
+    .where(eq(careRecipients.id, parseInt(careRecipientId, 10)));
 
-      const [recipient] = await db.select({ name: careRecipients.name }).from(careRecipients)
-        .where(eq(careRecipients.id, parseInt(careRecipientId, 10)));
+  const taskTitle   = task?.title     ?? `Task #${taskId}`;
+  const patientName = recipient?.name ?? `Patient #${careRecipientId}`;
 
-      const taskTitle     = task?.title     ?? `Task #${taskId}`;
-      const patientName   = recipient?.name ?? `Patient #${careRecipientId}`;
-      const alertMessage  = `Task "${taskTitle}" skipped for ${patientName} on ${logDate}`;
+  // ── Transactional write: log + alert (atomic) ─────────────────────────────
+  const created = await db.transaction(async (tx) => {
+    const [log] = await tx.insert(taskLogs).values({
+      taskId:          parseInt(taskId, 10),
+      careRecipientId: parseInt(careRecipientId, 10),
+      staffId:         staffId ?? null,
+      shiftId:         parseInt(shiftId, 10),
+      status:          status  ?? "done",
+      notes:           notes   ?? null,
+      logDate,
+    }).returning();
 
-      // Persist alert (non-blocking)
-      db.insert(alerts).values({
+    if (status === "skipped") {
+      await tx.insert(alerts).values({
         type:            "task_skipped",
         severity:        "medium",
         careRecipientId: parseInt(careRecipientId, 10),
-        shiftId:         shiftId ?? null,
-        message:         alertMessage,
+        shiftId:         parseInt(shiftId, 10),
+        message:         `Task "${taskTitle}" skipped for ${patientName} on ${logDate}`,
         resolved:        false,
-      }).then(() => {}).catch(console.error);
-
-      // Telegram (fire-and-forget)
-      notify.alertTaskSkipped(patientName, taskTitle).catch(console.error);
-    } catch (err) {
-      console.error("Alert engine error:", err);
+      });
     }
+
+    return log;
+  });
+
+  // ── Telegram (fire-and-forget, outside transaction) ───────────────────────
+  if (status === "skipped") {
+    notify.alertTaskSkipped(patientName, taskTitle).catch(console.error);
   }
 
   return NextResponse.json(created, { status: 201 });

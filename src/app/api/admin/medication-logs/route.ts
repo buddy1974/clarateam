@@ -17,7 +17,6 @@ export async function GET(req: NextRequest) {
   const from         = searchParams.get("from");
   const to           = searchParams.get("to");
 
-  // If filtering by recipientId, first resolve medication IDs for that recipient
   if (recipientId) {
     const meds = await db
       .select({ id: medications.id })
@@ -64,50 +63,60 @@ export async function POST(req: NextRequest) {
 
   const { medicationId, staffId, shiftId, scheduledTime, logDate, status, notes } = await req.json();
 
-  const [created] = await db.insert(medicationLogs).values({
-    medicationId,
-    staffId:        staffId  ?? null,
-    shiftId:        shiftId  ?? null,
-    scheduledTime,
-    logDate,
-    status:         status   ?? "given",
-    administeredAt: status === "given" ? new Date() : null,
-    notes:          notes    ?? null,
-  }).returning();
+  // ── Accountability enforcement ────────────────────────────────────────────
+  if (!shiftId) {
+    return NextResponse.json(
+      { error: "shiftId is required for accountability" },
+      { status: 400 }
+    );
+  }
 
-  // ── Alert engine: medication missed / refused / held ─────────────────────
-  if (status && status !== "given") {
-    try {
-      const [med] = await db
-        .select({ name: medications.name, recipientId: medications.recipientId })
-        .from(medications)
-        .where(eq(medications.id, medicationId));
+  // ── Resolve names for alert message ──────────────────────────────────────
+  const [med] = await db
+    .select({ name: medications.name, recipientId: medications.recipientId })
+    .from(medications)
+    .where(eq(medications.id, medicationId));
 
-      if (med) {
-        const [recipient] = await db
-          .select({ name: careRecipients.name })
-          .from(careRecipients)
-          .where(eq(careRecipients.id, med.recipientId));
+  const [recipient] = med
+    ? await db.select({ name: careRecipients.name }).from(careRecipients)
+        .where(eq(careRecipients.id, med.recipientId))
+    : [null];
 
-        const patientName  = recipient?.name ?? `Patient #${med.recipientId}`;
-        const alertMessage = `${med.name} ${status} for ${patientName} at ${scheduledTime} on ${logDate}`;
+  const medName     = med?.name      ?? `Med #${medicationId}`;
+  const patientName = recipient?.name ?? (med ? `Patient #${med.recipientId}` : "Unknown");
 
-        // Persist alert (non-blocking)
-        db.insert(alerts).values({
-          type:            "medication_missed",
-          severity:        "high",
-          careRecipientId: med.recipientId,
-          shiftId:         shiftId ?? null,
-          message:         alertMessage,
-          resolved:        false,
-        }).then(() => {}).catch(console.error);
+  // ── Transactional write: log + alert (atomic) ─────────────────────────────
+  const isMissed = status && status !== "given";
 
-        // Telegram (fire-and-forget)
-        notify.alertMedicationMissed(patientName, scheduledTime).catch(console.error);
-      }
-    } catch (err) {
-      console.error("Alert engine error:", err);
+  const created = await db.transaction(async (tx) => {
+    const [log] = await tx.insert(medicationLogs).values({
+      medicationId,
+      staffId:        staffId  ?? null,
+      shiftId:        parseInt(shiftId, 10),
+      scheduledTime,
+      logDate,
+      status:         status   ?? "given",
+      administeredAt: status === "given" ? new Date() : null,
+      notes:          notes    ?? null,
+    }).returning();
+
+    if (isMissed) {
+      await tx.insert(alerts).values({
+        type:            "medication_missed",
+        severity:        "high",
+        careRecipientId: med?.recipientId ?? null,
+        shiftId:         parseInt(shiftId, 10),
+        message:         `${medName} ${status} for ${patientName} at ${scheduledTime} on ${logDate}`,
+        resolved:        false,
+      });
     }
+
+    return log;
+  });
+
+  // ── Telegram (fire-and-forget, outside transaction) ───────────────────────
+  if (isMissed) {
+    notify.alertMedicationMissed(patientName, scheduledTime).catch(console.error);
   }
 
   return NextResponse.json(created, { status: 201 });

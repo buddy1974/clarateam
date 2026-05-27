@@ -41,6 +41,9 @@ interface CareTask {
 interface TaskLog {
   id: number; taskId: number; status: string; logDate: string; notes: string | null;
 }
+interface ActiveShift {
+  id: number; staffId: number; startTime: string; endTime: string; status: string;
+}
 
 type Tab = "overview" | "careplan" | "medication" | "diet" | "tasks" | "history";
 
@@ -80,8 +83,9 @@ export default function RecipientDetailPage() {
   const [dietPlan,  setDietPlan]  = useState<DietPlan | null>(null);
   const [tasks,     setTasks]     = useState<CareTask[]>([]);
   const [taskLogs,  setTaskLogs]  = useState<TaskLog[]>([]);
-  const [auditLog,  setAuditLog]  = useState<{id:number;action:string;performedBy:string;timestamp:string}[]>([]);
-  const [loading,   setLoading]   = useState(true);
+  const [auditLog,   setAuditLog]   = useState<{id:number;action:string;performedBy:string;timestamp:string}[]>([]);
+  const [activeShift, setActiveShift] = useState<ActiveShift | null>(null);
+  const [loading,    setLoading]    = useState(true);
 
   // ── Data loaders ────────────────────────────────────────────────────────
 
@@ -125,6 +129,19 @@ export default function RecipientDetailPage() {
     if (res.ok) setAuditLog(await res.json());
   }, [rid]);
 
+  const loadShift = useCallback(async () => {
+    const todayStr = new Date().toLocaleDateString("en-CA");
+    const res = await fetch(`/api/admin/shifts?from=${todayStr}&to=${todayStr}&recipientId=${rid}`);
+    if (!res.ok) return;
+    const shiftList: ActiveShift[] = await res.json();
+    // Prefer active shift, then scheduled, then first available
+    const active = shiftList.find((s) => s.status === "active")
+      ?? shiftList.find((s) => s.status === "scheduled" || s.status === "confirmed")
+      ?? shiftList[0]
+      ?? null;
+    setActiveShift(active);
+  }, [rid]);
+
   // Initial load
   useEffect(() => {
     (async () => {
@@ -137,11 +154,11 @@ export default function RecipientDetailPage() {
   // Tab-triggered loads
   useEffect(() => {
     if (tab === "careplan")   loadCarePlan();
-    if (tab === "medication") loadMeds();
+    if (tab === "medication") { loadMeds();  loadShift(); }
     if (tab === "diet")       loadDiet();
-    if (tab === "tasks")      loadTasks();
+    if (tab === "tasks")      { loadTasks(); loadShift(); }
     if (tab === "history")    loadAudit();
-  }, [tab, loadCarePlan, loadMeds, loadDiet, loadTasks, loadAudit]);
+  }, [tab, loadCarePlan, loadMeds, loadDiet, loadTasks, loadAudit, loadShift]);
 
   // ── Render ───────────────────────────────────────────────────────────────
 
@@ -212,9 +229,9 @@ export default function RecipientDetailPage() {
       {/* Tab content */}
       {tab === "overview"   && <OverviewTab   r={recipient} onSaved={loadRecipient} />}
       {tab === "careplan"   && <CarePlanTab   plan={carePlan} recipientId={rid} onSaved={loadCarePlan} />}
-      {tab === "medication" && <MedicationTab meds={meds} logs={medLogs} recipientId={rid} onSaved={loadMeds} />}
+      {tab === "medication" && <MedicationTab meds={meds} logs={medLogs} recipientId={rid} shiftId={activeShift?.id ?? null} onSaved={loadMeds} />}
       {tab === "diet"       && <DietTab       plan={dietPlan} recipientId={rid} onSaved={loadDiet} />}
-      {tab === "tasks"      && <TasksTab      tasks={tasks} logs={taskLogs} recipientId={rid} onSaved={loadTasks} />}
+      {tab === "tasks"      && <TasksTab      tasks={tasks} logs={taskLogs} recipientId={rid} shiftId={activeShift?.id ?? null} onSaved={loadTasks} />}
       {tab === "history"    && <HistoryTab    logs={auditLog} />}
     </div>
   );
@@ -454,8 +471,8 @@ function CarePlanTab({ plan, recipientId, onSaved }: { plan: CarePlan | null; re
 // TAB: Medication
 // ══════════════════════════════════════════════════════════════════════════════
 
-function MedicationTab({ meds, logs, recipientId, onSaved }: {
-  meds: Medication[]; logs: MedLog[]; recipientId: number; onSaved: () => void;
+function MedicationTab({ meds, logs, recipientId, shiftId, onSaved }: {
+  meds: Medication[]; logs: MedLog[]; recipientId: number; shiftId: number | null; onSaved: () => void;
 }) {
   const [showAdd,  setShowAdd]  = useState(false);
   const [saving,   setSaving]   = useState(false);
@@ -476,12 +493,13 @@ function MedicationTab({ meds, logs, recipientId, onSaved }: {
   ).sort((a, b) => a.time.localeCompare(b.time));
 
   async function logMed(medId: number, scheduledTime: string, status: string) {
+    if (!shiftId) return; // blocked — no shift
     const key = `${medId}-${scheduledTime}`;
     setLogging(key);
     await fetch("/api/admin/medication-logs", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ medicationId: medId, scheduledTime, logDate: todayDate, status }),
+      body: JSON.stringify({ medicationId: medId, scheduledTime, logDate: todayDate, status, shiftId }),
     });
     setLogging(null);
     onSaved();
@@ -526,6 +544,20 @@ function MedicationTab({ meds, logs, recipientId, onSaved }: {
 
   return (
     <div className="space-y-5">
+      {/* No-shift accountability banner */}
+      {!shiftId && (
+        <div className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
+          <div className="flex-1">
+            <p className="text-sm font-bold text-amber-800">No active shift for this patient today.</p>
+            <p className="text-xs text-amber-600">Medication logging requires an assigned shift.</p>
+          </div>
+          <a href="/admin/shifts" className="shrink-0 rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-amber-600">
+            Add Shift
+          </a>
+        </div>
+      )}
+
       {/* Today's MAR */}
       <div>
         <div className="flex items-center justify-between mb-3">
@@ -553,7 +585,7 @@ function MedicationTab({ meds, logs, recipientId, onSaved }: {
                   {status === "pending" && (
                     <div className="flex gap-1 shrink-0">
                       {["given","missed","refused","held"].map((s) => (
-                        <button key={s} disabled={isLogging}
+                        <button key={s} disabled={isLogging || !shiftId}
                           onClick={() => logMed(med.id, time, s)}
                           className={`rounded-lg px-2 py-1 text-[10px] font-bold border transition-all disabled:opacity-50 ${
                             s === "given"   ? "border-green-300 bg-white text-green-700 hover:bg-green-100" :
@@ -768,8 +800,8 @@ function DietTab({ plan, recipientId, onSaved }: { plan: DietPlan | null; recipi
 // TAB: Tasks
 // ══════════════════════════════════════════════════════════════════════════════
 
-function TasksTab({ tasks, logs, recipientId, onSaved }: {
-  tasks: CareTask[]; logs: TaskLog[]; recipientId: number; onSaved: () => void;
+function TasksTab({ tasks, logs, recipientId, shiftId, onSaved }: {
+  tasks: CareTask[]; logs: TaskLog[]; recipientId: number; shiftId: number | null; onSaved: () => void;
 }) {
   const [showAdd,  setShowAdd] = useState(false);
   const [saving,   setSaving]  = useState(false);
@@ -783,11 +815,12 @@ function TasksTab({ tasks, logs, recipientId, onSaved }: {
   }
 
   async function logTask(taskId: number, status: "done" | "skipped") {
+    if (!shiftId) return; // blocked — no shift
     setLogging(taskId);
     await fetch("/api/admin/task-logs", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ taskId, careRecipientId: recipientId, status, logDate: todayDate }),
+      body: JSON.stringify({ taskId, careRecipientId: recipientId, status, logDate: todayDate, shiftId }),
     });
     setLogging(null);
     onSaved();
@@ -818,6 +851,20 @@ function TasksTab({ tasks, logs, recipientId, onSaved }: {
 
   return (
     <div className="space-y-4">
+      {/* No-shift accountability banner */}
+      {!shiftId && (
+        <div className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
+          <div className="flex-1">
+            <p className="text-sm font-bold text-amber-800">No active shift for this patient today.</p>
+            <p className="text-xs text-amber-600">Task logging requires an assigned shift.</p>
+          </div>
+          <a href="/admin/shifts" className="shrink-0 rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-amber-600">
+            Add Shift
+          </a>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">
           Tasks — {new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
@@ -864,12 +911,12 @@ function TasksTab({ tasks, logs, recipientId, onSaved }: {
                 <div className="shrink-0 flex gap-1">
                   {!log ? (
                     <>
-                      <button disabled={isLogging} onClick={() => logTask(task.id, "done")}
+                      <button disabled={isLogging || !shiftId} onClick={() => logTask(task.id, "done")}
                         className="flex items-center gap-1 rounded-lg border border-green-300 bg-white px-2.5 py-1.5 text-xs font-bold text-green-700 hover:bg-green-50 disabled:opacity-50 min-h-[44px]">
                         <CheckCircle className="h-3.5 w-3.5" />
                         {isLogging ? "…" : "Done"}
                       </button>
-                      <button disabled={isLogging} onClick={() => logTask(task.id, "skipped")}
+                      <button disabled={isLogging || !shiftId} onClick={() => logTask(task.id, "skipped")}
                         className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-bold text-gray-500 hover:bg-gray-50 disabled:opacity-50 min-h-[44px]">
                         {isLogging ? "…" : "Skip"}
                       </button>

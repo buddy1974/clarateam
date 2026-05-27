@@ -21,10 +21,13 @@ export async function GET(req: NextRequest) {
   const to       = searchParams.get("to");
   const staffId  = searchParams.get("staffId");
 
+  const recipientId = searchParams.get("recipientId");
+
   const conditions = [];
-  if (from)    conditions.push(gte(shifts.shiftDate, from));
-  if (to)      conditions.push(lte(shifts.shiftDate, to));
-  if (staffId) conditions.push(eq(shifts.staffId, parseInt(staffId)));
+  if (from)        conditions.push(gte(shifts.shiftDate, from));
+  if (to)          conditions.push(lte(shifts.shiftDate, to));
+  if (staffId)     conditions.push(eq(shifts.staffId,     parseInt(staffId)));
+  if (recipientId) conditions.push(eq(shifts.recipientId, parseInt(recipientId)));
 
   const rows = conditions.length
     ? await db.select().from(shifts).where(and(...conditions)).orderBy(shifts.shiftDate, shifts.startTime)
