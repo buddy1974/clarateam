@@ -6,7 +6,7 @@ Run this single command to get everything ready:
 
 ```
 git add -A
-git commit -m "ClaraCare OS Phase 5: CMS — site settings, testimonials, FAQs, public API endpoints"
+git commit -m "Fix: remove unused ts-expect-error in invoices route — restore build"
 git push
 ```
 

@@ -11,16 +11,16 @@ import {
 const OFFICE = "817-265-5762";
 
 const NAV_LINKS = [
-  { label: "Services",                  href: "/#services" },
+  { label: "Services",                  href: "/services" },
   { label: "Caregiving Opportunities",  href: "/caregiving-opportunities" },
-  { label: "How It Works",              href: "/#process" },
-  { label: "Why Us",                    href: "/#why" },
-  { label: "Contact",                   href: "/#contact" },
+  { label: "How It Works",              href: "/how-it-works" },
+  { label: "Why Us",                    href: "/about" },
+  { label: "Contact",                   href: "/contact" },
 ] as const;
 
 const SOLUTIONS = [
   { icon: LayoutGrid, label: "All Capabilities",    href: "/platform",              sub: "Full platform overview" },
-  { icon: Users2,    label: "Staffing Registry",    href: "/#services",             sub: "CNAs, LVNs, HHAs, PRN" },
+  { icon: Users2,    label: "Staffing Registry",    href: "/services",              sub: "CNAs, LVNs, HHAs, PRN" },
   { icon: Home,      label: "Residential Placement", href: "/residential-placement", sub: "Find the right care home" },
   { icon: Activity,  label: "Care Monitoring",       href: "/care-monitoring",       sub: "AI + privacy-first oversight" },
   { icon: Wrench,    label: "Care Tools",            href: "/care-tools",            sub: "Workflow & documentation" },
@@ -153,7 +153,7 @@ export default function Navbar() {
             {OFFICE}
           </a>
           <a
-            href="/#emergency"
+            href="/contact"
             className="inline-flex items-center gap-1.5 rounded-full border-2 border-accent bg-accent/10 px-5 py-2.5 text-sm font-bold text-accent transition-all hover:bg-accent hover:text-black"
             data-track="nav-get-care"
           >
@@ -259,7 +259,7 @@ export default function Navbar() {
                 <Phone className="h-4 w-4" /> Call Now
               </a>
               <a
-                href="/#emergency"
+                href="/contact"
                 onClick={() => setOpen(false)}
                 className="flex items-center justify-center gap-2 rounded-full border-2 border-accent bg-accent/10 py-3 text-sm font-bold text-accent transition-all hover:bg-accent hover:text-black active:scale-[0.97]"
                 data-track="mobile-nav-care"

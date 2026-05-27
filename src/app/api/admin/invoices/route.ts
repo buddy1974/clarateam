@@ -40,7 +40,6 @@ export async function GET(req: NextRequest) {
   if (status)   conditions.push(eq(invoices.status, status as "draft" | "sent" | "paid" | "overdue" | "cancelled"));
   if (clientId) conditions.push(eq(invoices.clientId, parseInt(clientId)));
 
-  // @ts-expect-error drizzle where accepts conditions array
   const rows = conditions.length ? await query.where(and(...conditions)) : await query;
   return NextResponse.json(rows);
 }
