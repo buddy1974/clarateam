@@ -6,7 +6,7 @@ Run this single command to get everything ready:
 
 ```
 git add -A
-git commit -m "feat: Care Plans, AI Tools, UI polish — logo, dashboard, notifications"
+git commit -m "feat: Mobile optimization — admin panels, chat widget, iOS safe-area, care plans mobile nav"
 git push
 ```
 
@@ -30,4 +30,4 @@ After pushing, remind the user to add these in Vercel → Project Settings → E
 Next.js 14 App Router, Tailwind v4, Framer Motion, Neon + Drizzle ORM.
 Admin dashboard lives at /admin (PIN protected).
 Caregiver application form lives at /caregiving-opportunities.
-All new submissions → Neon DB + Telegram notification + Resend confirmation email.
+All new submissions → Neon DB + Telegram notification + Resend

@@ -120,7 +120,7 @@ function AddMedModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 md:items-center">
-      <div className="w-full max-w-lg rounded-t-3xl bg-white p-6 shadow-2xl md:rounded-3xl">
+      <div className="w-full max-w-lg rounded-t-3xl bg-white p-6 shadow-2xl md:rounded-3xl modal-sheet-safe">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">Add Medication</h2>
           <button onClick={onClose} className="rounded-full p-1 hover:bg-gray-100">
@@ -251,7 +251,7 @@ function LogDoseModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 md:items-center">
-      <div className="w-full max-w-sm rounded-t-3xl bg-white p-6 shadow-2xl md:rounded-3xl">
+      <div className="w-full max-w-sm rounded-t-3xl bg-white p-6 shadow-2xl md:rounded-3xl modal-sheet-safe">
         <div className="mb-5 flex items-center justify-between">
           <div>
             <h2 className="font-bold text-gray-900">{med.name} {med.dosage}</h2>

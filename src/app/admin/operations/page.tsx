@@ -154,7 +154,7 @@ export default function OperationsPage() {
       )}
 
       {/* Stats bar */}
-      <div className="mb-5 grid grid-cols-4 gap-2">
+      <div className="mb-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {[
           { label: "Shifts",    value: stats.totalShifts,  icon: Calendar,      color: "text-blue-600" },
           { label: "Patients",  value: stats.totalPatients, icon: User,         color: "text-purple-600" },
@@ -419,6 +419,6 @@ function ShiftCard({ shift, onRefresh }: { shift: ShiftData; onRefresh: () => vo
           </div>
         </div>
       )}
-    </div>
+       </div>
   );
 }

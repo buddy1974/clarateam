@@ -43,9 +43,4 @@ dist-ssr
 out/
 
 # TypeScript
-tsconfig.tsbuildinfo
-*.tsbuildinfo
-
-# Next.js build output
-.next/
-tsconfig.tsbuildinfo
+tsco

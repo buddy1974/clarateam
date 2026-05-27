@@ -104,7 +104,7 @@ function NewInvoiceModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 md:items-center">
-      <div className="w-full max-w-md rounded-t-3xl bg-white p-6 shadow-2xl md:rounded-3xl">
+      <div className="w-full max-w-md rounded-t-3xl bg-white p-6 shadow-2xl md:rounded-3xl modal-sheet-safe">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">New Invoice</h2>
           <button onClick={onClose} className="rounded-full p-1 hover:bg-gray-100">

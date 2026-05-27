@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
-  Heart, Plus, Search, ChevronRight, Edit3, Save,
+  Heart, Plus, Search, ChevronRight, ChevronLeft, Edit3, Save,
   Loader2, AlertCircle, Utensils, Pill, FileText,
   CheckCircle2, Sparkles,
 } from "lucide-react";
@@ -36,6 +36,8 @@ export default function CarePlansPage() {
   const [saved, setSaved]           = useState(false);
   const [aiLoading, setAiLoading]   = useState(false);
   const [loading, setLoading]       = useState(true);
+  // Mobile: show "list" or "editor" panel
+  const [mobileView, setMobileView] = useState<"list" | "editor">("list");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -61,6 +63,8 @@ export default function CarePlansPage() {
       dietType:   existing?.dietType   ?? "",
       notes:      existing?.notes      ?? "",
     });
+    // On mobile, switch to the editor view after selecting
+    setMobileView("editor");
   }
 
   async function save() {
@@ -109,7 +113,10 @@ export default function CarePlansPage() {
     <div className="flex h-full min-h-screen flex-col md:flex-row">
 
       {/* ── Sidebar — patient list ── */}
-      <div className="w-full border-b border-gray-200 bg-white md:w-72 md:border-b-0 md:border-r md:min-h-screen">
+      {/* On mobile: shown only when mobileView="list" */}
+      <div className={`w-full border-b border-gray-200 bg-white md:block md:w-72 md:border-b-0 md:border-r md:min-h-screen ${
+        mobileView === "list" ? "block" : "hidden"
+      }`}>
         <div className="p-4">
           <h1 className="font-serif text-xl font-bold text-gray-900">Care Plans</h1>
           <p className="mt-0.5 text-xs text-gray-500">Clinical plans per care recipient</p>
@@ -162,15 +169,31 @@ export default function CarePlansPage() {
       </div>
 
       {/* ── Main — care plan editor ── */}
-      <div className="flex-1 px-4 py-6 sm:px-6">
+      {/* On mobile: shown only when mobileView="editor" */}
+      <div className={`flex-1 px-4 py-6 sm:px-6 md:block ${mobileView === "editor" ? "block" : "hidden"}`}>
+
+        {/* Mobile back button */}
+        <button
+          onClick={() => setMobileView("list")}
+          className="mb-4 flex items-center gap-1.5 text-sm font-semibold text-purple-600 md:hidden"
+        >
+          <ChevronLeft className="h-4 w-4" /> All Patients
+        </button>
+
         {!selected ? (
           <div className="flex h-64 flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-gray-200 text-center">
             <Heart className="h-10 w-10 text-purple-300" />
             <p className="text-sm font-semibold text-gray-500">Select a care recipient to view or create their care plan</p>
+            <button
+              onClick={() => setMobileView("list")}
+              className="flex items-center gap-1.5 rounded-full border border-purple-200 bg-purple-50 px-4 py-2 text-sm font-semibold text-purple-600 md:hidden"
+            >
+              <ChevronLeft className="h-4 w-4" /> Choose Patient
+            </button>
           </div>
         ) : (
           <>
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 className="font-serif text-2xl font-bold text-gray-900">
                   {recipients.find((r) => r.id === selected)?.name}
@@ -303,21 +326,18 @@ export default function CarePlansPage() {
                 <div className="border-b border-gray-100 px-5 py-4">
                   <h3 className="font-semibold text-gray-900">All Care Plans</h3>
                 </div>
-                <div className="divide-y divide-gray-50">
+                             <div className="divide-y divide-gray-100">
                   {plans.map((p) => (
                     <button
                       key={p.id}
-                      onClick={() => selectRecipient(p.careRecipientId!)}
-                      className="flex w-full items-center justify-between px-5 py-3.5 hover:bg-gray-50 transition-colors"
+                      onClick={() => selectRecipient(p.careRecipientId)}
+                      className="flex w-full items-center justify-between px-5 py-3 text-left hover:bg-gray-50"
                     >
-                      <div className="text-left">
-                        <div className="text-sm font-semibold text-gray-900">{p.recipientName}</div>
-                        <div className="text-xs text-gray-400">
-                          Updated {new Date(p.updatedAt).toLocaleDateString()} ·{" "}
-                          {[p.conditions && "Conditions", p.allergies && "Allergies", p.dietType && "Diet"].filter(Boolean).join(" · ") || "Basic plan"}
-                        </div>
+                      <div>
+                        <div className="text-sm font-semibold text-gray-900">{p.recipientName ?? `Recipient #${p.careRecipientId}`}</div>
+                        <div className="text-xs text-gray-400">Updated {new Date(p.updatedAt).toLocaleDateString()}</div>
                       </div>
-                      <Plus className="h-4 w-4 text-gray-300" />
+                      <ChevronRight className="h-4 w-4 text-gray-300" />
                     </button>
                   ))}
                 </div>

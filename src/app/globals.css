@@ -92,10 +92,14 @@
 @layer base {
   * {
     border-color: var(--color-border);
+    /* Snap touch interactions for all interactive elements */
+    touch-action: manipulation;
   }
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
+    /* Prevent horizontal overflow on mobile */
+    overflow-x: hidden;
   }
   body {
     background-color: var(--color-background);
@@ -104,40 +108,24 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* Prevent horizontal scroll caused by full-width sections */
+    overflow-x: hidden;
+    /* True viewport on mobile (accounts for browser chrome) */
+    min-height: 100dvh;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
   }
-}
-
-/* Utility: serif headings */
-.font-serif {
-  font-family: var(--font-serif);
-}
-
-/* Analytics tracking helpers */
-[data-track] {
-  cursor: pointer;
-}
-
-/* Scrollbar hide — used in chat widget horizontal scroll */
-@layer utilities {
-  .scrollbar-hide {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+  /* Improve tap target sizing for links and buttons */
+  a, button {
+    min-height: 44px;
+    min-width: 44px;
   }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* iOS safe-area bottom padding for sticky bars */
-  .pb-safe {
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  /* Exception: inline text links don't need forced height */
+  p a, li a, nav a {
+    min-height: unset;
+    min-width: unset;
   }
 }
 
-/* Prevent text inflation on mobile */
-html {
-  text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-}
+/* Utility: serif headin

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import {
   Sparkles, FileText, Users, ClipboardList,
   AlertCircle, Loader2, Copy, CheckCheck,
@@ -88,6 +88,7 @@ export default function AIPage() {
   const [loading, setLoading]       = useState(false);
   const [copied, setCopied]         = useState(false);
   const [error, setError]           = useState("");
+  const outputRef = useRef<HTMLDivElement>(null);
 
   const run = useCallback(async () => {
     if (!input.trim()) return;
@@ -106,6 +107,8 @@ export default function AIPage() {
       } else {
         const { result: r } = await res.json();
         setResult(r);
+        // On mobile, scroll the output panel into view
+        setTimeout(() => outputRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
       }
     } catch {
       setError("Network error — check your connection");
@@ -195,9 +198,10 @@ export default function AIPage() {
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              rows={14}
+              rows={8}
               placeholder={activeTool.placeholder}
-              className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100"
+              className="w-full resize-y rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 lg:rows-14 min-h-[160px]"
+              style={{ minHeight: "160px" }}
             />
             <p className="mt-2 text-xs text-gray-400">💡 {activeTool.tip}</p>
           </div>
@@ -218,7 +222,7 @@ export default function AIPage() {
         </div>
 
         {/* Output panel */}
-        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div ref={outputRef} className="rounded-2xl border border-gray-200 bg-white shadow-sm scroll-mt-20">
           <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
             <span className="font-semibold text-gray-900">AI Output</span>
             {result && (
@@ -294,14 +298,10 @@ export default function AIPage() {
                 <div className="text-sm font-bold text-gray-900">{t.label}</div>
                 <div className="mt-0.5 text-xs text-gray-500">{t.description}</div>
               </div>
-            </button>
-          );
-        })}
+              </button>
+            );
+          })}
+        </div>
       </div>
-
-      <p className="mt-6 text-center text-xs text-gray-400">
-        Powered by Claude (Anthropic) · Requires <code className="rounded bg-gray-100 px-1">ANTHROPIC_API_KEY</code> in Vercel settings
-      </p>
-    </div>
-  );
-}
+    );
+  }
