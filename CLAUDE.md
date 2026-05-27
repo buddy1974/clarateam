@@ -30,4 +30,4 @@ After pushing, remind the user to add these in Vercel → Project Settings → E
 Next.js 14 App Router, Tailwind v4, Framer Motion, Neon + Drizzle ORM.
 Admin dashboard lives at /admin (PIN protected).
 Caregiver application form lives at /caregiving-opportunities.
-All new submissions → Neon DB + Telegram notification + Resend
+All new submissions → Neon DB + Telegram notification + Resend confirmation email.
