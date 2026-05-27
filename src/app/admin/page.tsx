@@ -1,9 +1,8 @@
 import { redirect } from "next/navigation";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
-import AdminDashboard from "./AdminDashboard";
 
-export default async function AdminPage() {
-  const authed = await isAdminAuthenticated();
-  if (!authed) redirect("/admin/login");
-  return <AdminDashboard />;
+// Middleware handles auth — this just redirects to the dashboard
+export const dynamic = "force-dynamic";
+
+export default function AdminPage() {
+  redirect("/admin/dashboard");
 }

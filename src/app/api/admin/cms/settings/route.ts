@@ -1,29 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, emails } from "@/db";
+import { db, siteSettings } from "@/db";
+import { eq } from "drizzle-orm";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { desc, eq } from "drizzle-orm";
 
 export async function GET() {
   if (!await isAdminAuthenticated()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
-  const rows = await db
-    .select()
-    .from(emails)
-    .orderBy(desc(emails.receivedAt))
-    .limit(100);
-
+  const rows = await db.select().from(siteSettings).orderBy(siteSettings.section, siteSettings.key);
   return NextResponse.json(rows);
 }
 
-// PATCH /api/admin/inbox — mark email as read
 export async function PATCH(req: NextRequest) {
   if (!await isAdminAuthenticated()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
-  const { id } = await req.json();
-  await db.update(emails).set({ isRead: true }).where(eq(emails.id, id));
-  return NextResponse.json({ success: true });
+  const { key, value } = await req.json();
+  const [updated] = await db
+    .update(siteSettings)
+    .set({ value, updatedAt: new Date() })
+    .where(eq(siteSettings.key, key))
+    .returning();
+  return NextResponse.json(updated);
 }

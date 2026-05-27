@@ -6,7 +6,7 @@ Run this single command to get everything ready:
 
 ```
 git add -A
-git commit -m "Fix: remove broken Drizzle query in sync-inbox route"
+git commit -m "ClaraCare OS Phase 5: CMS — site settings, testimonials, FAQs, public API endpoints"
 git push
 ```
 
