@@ -459,6 +459,25 @@ export const taskLogs = pgTable("task_logs", {
 // ── PHASE 3 TABLES — OPERATIONS ENGINE ───────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════════
 
+// ══════════════════════════════════════════════════════════════════════════
+// ── PHASE 4 TABLES — BUSINESS + COMPLIANCE ENGINE ────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+
+// ── Table: reports ────────────────────────────────────────────────────────
+// Generated compliance and business reports
+
+export const reports = pgTable("reports", {
+  id:              serial("id").primaryKey(),
+  type:            text("type").notNull(),        // "mar" | "shift" | "task" | "summary"
+  careRecipientId: integer("care_recipient_id").references(() => careRecipients.id),
+  periodFrom:      text("period_from").notNull(),
+  periodTo:        text("period_to").notNull(),
+  content:         text("content"),               // JSON string — raw data snapshot
+  aiSummary:       text("ai_summary"),            // AI-enhanced narrative
+  createdBy:       text("created_by").notNull().default("admin"),
+  createdAt:       timestamp("created_at").defaultNow().notNull(),
+});
+
 // ── Table: alerts ─────────────────────────────────────────────────────────
 // Operational alerts — auto-generated from missed meds, skipped tasks, etc.
 

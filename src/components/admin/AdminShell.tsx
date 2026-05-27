@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, Building2, ClipboardList,
   Mail, Calendar, Pill, Receipt, Palette, LogOut,
   Upload, ClipboardCheck, Search, Heart,
-  Activity, AlertTriangle,
+  Activity, AlertTriangle, FileText, ShieldCheck,
 } from "lucide-react";
 
 // ── Navigation config ──────────────────────────────────────────────
@@ -25,7 +25,9 @@ const PRIMARY_NAV = [
   { href: "/admin/inbox",     label: "Inbox",      icon: Mail },
   { href: "/admin/rota",      label: "Rota",       icon: Calendar },
   { href: "/admin/medication",label: "Medication", icon: Pill },
-  { href: "/admin/billing",   label: "Billing",    icon: Receipt },
+  { href: "/admin/billing",    label: "Billing",     icon: Receipt },
+  { href: "/admin/reports",   label: "Reports",    icon: FileText },
+  { href: "/admin/compliance",label: "Compliance", icon: ShieldCheck },
   { href: "/admin/cms",       label: "CMS",        icon: Palette },
 ] as const;
 
@@ -45,7 +47,9 @@ const PAGE_TITLE: Record<string, string> = {
   "/admin/inbox":      "Inbox",
   "/admin/rota":       "Rota",
   "/admin/medication": "Medication",
-  "/admin/billing":    "Billing",
+  "/admin/billing":     "Billing",
+  "/admin/reports":    "Reports",
+  "/admin/compliance": "Compliance",
   "/admin/cms":        "CMS",
 };
 

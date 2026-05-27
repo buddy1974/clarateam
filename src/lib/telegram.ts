@@ -86,6 +86,35 @@ export const notify = {
       `<a href="https://claracareteam.com/admin/assignments">View Assignments →</a>`
     ),
 
+  // ── Phase 4: Business events ─────────────────────────────────────────────
+
+  invoiceGenerated: (clientName: string, invoiceNo: string, total: string) =>
+    sendTelegram(
+      `📄 <b>Invoice Generated</b>\n\n` +
+      `<b>Client:</b> ${clientName}\n` +
+      `<b>Invoice:</b> ${invoiceNo}\n` +
+      `<b>Total:</b> $${total}\n\n` +
+      `<a href="https://claracareteam.com/admin/billing">View Billing →</a>`
+    ),
+
+  invoicePaid: (clientName: string, invoiceNo: string, total: string) =>
+    sendTelegram(
+      `✅ <b>Invoice Paid</b>\n\n` +
+      `<b>Client:</b> ${clientName}\n` +
+      `<b>Invoice:</b> ${invoiceNo}\n` +
+      `<b>Amount:</b> $${total}\n\n` +
+      `<a href="https://claracareteam.com/admin/billing">View Billing →</a>`
+    ),
+
+  reportGenerated: (type: string, patientName: string, period: string) =>
+    sendTelegram(
+      `📊 <b>Report Generated</b>\n\n` +
+      `<b>Type:</b> ${type.toUpperCase()}\n` +
+      `<b>Patient:</b> ${patientName}\n` +
+      `<b>Period:</b> ${period}\n\n` +
+      `<a href="https://claracareteam.com/admin/reports">View Reports →</a>`
+    ),
+
   // ── Phase 3: Operational alerts ──────────────────────────────────────────
 
   alertMedicationMissed: (patientName: string, time: string, staffName?: string) =>

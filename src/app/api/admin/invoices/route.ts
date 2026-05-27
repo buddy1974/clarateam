@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db, invoices, invoiceLines, shifts, staff, clients } from "@/db";
 import { eq, and, gte, lte, desc } from "drizzle-orm";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { notify } from "@/lib/telegram";
 
 // ── GET — list invoices with optional status filter ─────────────────────────
 
@@ -155,6 +156,15 @@ export async function POST(req: NextRequest) {
       }))
     );
   }
+
+  // Fire-and-forget Telegram notification
+  const clientRow = await db.select({ name: clients.name }).from(clients)
+    .where(eq(clients.id, clientId)).then((r) => r[0]);
+  notify.invoiceGenerated(
+    clientRow?.name ?? `Client #${clientId}`,
+    invoiceNo,
+    total.toFixed(2),
+  ).catch(console.error);
 
   return NextResponse.json({ ...inv, lineCount: lineItems.length }, { status: 201 });
 }
