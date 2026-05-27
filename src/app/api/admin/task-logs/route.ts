@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { taskLogs, careTasks } from "@/db/schema";
+import { taskLogs, careTasks, alerts, careRecipients } from "@/db/schema";
 import { eq, and, inArray, desc } from "drizzle-orm";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { notify } from "@/lib/telegram";
 
 export async function GET(req: NextRequest) {
   if (!await isAdminAuthenticated()) {
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { taskId, careRecipientId, staffId, status, notes, logDate } = await req.json();
+  const { taskId, careRecipientId, staffId, shiftId, status, notes, logDate } = await req.json();
 
   if (!taskId || !careRecipientId || !logDate) {
     return NextResponse.json({ error: "taskId, careRecipientId, logDate required" }, { status: 400 });
@@ -59,10 +60,42 @@ export async function POST(req: NextRequest) {
     taskId:          parseInt(taskId, 10),
     careRecipientId: parseInt(careRecipientId, 10),
     staffId:         staffId ?? null,
+    shiftId:         shiftId ?? null,
     status:          status  ?? "done",
     notes:           notes   ?? null,
     logDate,
   }).returning();
+
+  // ── Alert engine: task skipped ────────────────────────────────────────────
+  if (status === "skipped") {
+    try {
+      // Get task title and recipient name for the alert message
+      const [task] = await db.select({ title: careTasks.title }).from(careTasks)
+        .where(eq(careTasks.id, parseInt(taskId, 10)));
+
+      const [recipient] = await db.select({ name: careRecipients.name }).from(careRecipients)
+        .where(eq(careRecipients.id, parseInt(careRecipientId, 10)));
+
+      const taskTitle     = task?.title     ?? `Task #${taskId}`;
+      const patientName   = recipient?.name ?? `Patient #${careRecipientId}`;
+      const alertMessage  = `Task "${taskTitle}" skipped for ${patientName} on ${logDate}`;
+
+      // Persist alert (non-blocking)
+      db.insert(alerts).values({
+        type:            "task_skipped",
+        severity:        "medium",
+        careRecipientId: parseInt(careRecipientId, 10),
+        shiftId:         shiftId ?? null,
+        message:         alertMessage,
+        resolved:        false,
+      }).then(() => {}).catch(console.error);
+
+      // Telegram (fire-and-forget)
+      notify.alertTaskSkipped(patientName, taskTitle).catch(console.error);
+    } catch (err) {
+      console.error("Alert engine error:", err);
+    }
+  }
 
   return NextResponse.json(created, { status: 201 });
 }

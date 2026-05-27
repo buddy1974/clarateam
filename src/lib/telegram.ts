@@ -85,4 +85,48 @@ export const notify = {
       `<b>${caregiverName}</b> assigned to <b>${clientName}</b>\n\n` +
       `<a href="https://claracareteam.com/admin/assignments">View Assignments →</a>`
     ),
+
+  // ── Phase 3: Operational alerts ──────────────────────────────────────────
+
+  alertMedicationMissed: (patientName: string, time: string, staffName?: string) =>
+    sendTelegram(
+      `⚠️ <b>Medication Missed</b>\n\n` +
+      `<b>Patient:</b> ${patientName}\n` +
+      `<b>Time:</b> ${time}\n` +
+      (staffName ? `<b>Caregiver:</b> ${staffName}\n` : "") +
+      `\n<a href="https://claracareteam.com/admin/alerts">View Alerts →</a>`
+    ),
+
+  alertTaskSkipped: (patientName: string, taskTitle: string) =>
+    sendTelegram(
+      `⚠️ <b>Task Skipped</b>\n\n` +
+      `<b>Patient:</b> ${patientName}\n` +
+      `<b>Task:</b> ${taskTitle}\n\n` +
+      `<a href="https://claracareteam.com/admin/alerts">View Alerts →</a>`
+    ),
+
+  alertShiftMissing: (patientName: string) =>
+    sendTelegram(
+      `🔴 <b>No Active Shift</b>\n\n` +
+      `<b>${patientName}</b> has care due but no assigned shift today.\n\n` +
+      `<a href="https://claracareteam.com/admin/shifts">Assign Shift →</a>`
+    ),
+
+  shiftStarted: (staffName: string, patientName: string, time: string) =>
+    sendTelegram(
+      `🟢 <b>Shift Started</b>\n\n` +
+      `<b>Caregiver:</b> ${staffName}\n` +
+      `<b>Patient:</b> ${patientName}\n` +
+      `<b>Time:</b> ${time}\n\n` +
+      `<a href="https://claracareteam.com/admin/operations">Operations →</a>`
+    ),
+
+  shiftCompleted: (staffName: string, patientName: string, hours: string) =>
+    sendTelegram(
+      `✅ <b>Shift Completed</b>\n\n` +
+      `<b>Caregiver:</b> ${staffName}\n` +
+      `<b>Patient:</b> ${patientName}\n` +
+      `<b>Hours:</b> ${hours}h\n\n` +
+      `<a href="https://claracareteam.com/admin/operations">Operations →</a>`
+    ),
 };

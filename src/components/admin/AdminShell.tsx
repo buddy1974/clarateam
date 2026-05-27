@@ -6,6 +6,7 @@ import {
   LayoutDashboard, Users, Building2, ClipboardList,
   Mail, Calendar, Pill, Receipt, Palette, LogOut,
   Upload, ClipboardCheck, Search, Heart,
+  Activity, AlertTriangle,
 } from "lucide-react";
 
 // ── Navigation config ──────────────────────────────────────────────
@@ -15,9 +16,11 @@ const PRIMARY_NAV = [
   { href: "/admin/intake",    label: "Intake",     icon: Upload },
   { href: "/admin/drafts",    label: "Drafts",     icon: ClipboardCheck },
   { href: "/admin/search",    label: "Search",     icon: Search },
+  { href: "/admin/operations", label: "Operations", icon: Activity },
+  { href: "/admin/alerts",     label: "Alerts",     icon: AlertTriangle },
   { href: "/admin/recipients", label: "Recipients", icon: Heart },
-  { href: "/admin/staff",     label: "Staff",      icon: Users },
-  { href: "/admin/clients",   label: "Clients",    icon: Building2 },
+  { href: "/admin/staff",      label: "Staff",      icon: Users },
+  { href: "/admin/clients",    label: "Clients",    icon: Building2 },
   { href: "/admin/requests",  label: "Requests",   icon: ClipboardList },
   { href: "/admin/inbox",     label: "Inbox",      icon: Mail },
   { href: "/admin/rota",      label: "Rota",       icon: Calendar },
@@ -33,6 +36,8 @@ const PAGE_TITLE: Record<string, string> = {
   "/admin/intake":     "Intake",
   "/admin/drafts":     "Drafts",
   "/admin/search":      "Search",
+  "/admin/operations":  "Operations",
+  "/admin/alerts":      "Alerts",
   "/admin/recipients":  "Recipients",
   "/admin/staff":       "Staff",
   "/admin/clients":    "Clients",

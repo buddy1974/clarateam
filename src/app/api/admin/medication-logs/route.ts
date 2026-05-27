@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, medicationLogs, medications } from "@/db";
+import { db } from "@/db";
+import { medicationLogs, medications, alerts, careRecipients } from "@/db/schema";
 import { eq, and, gte, lte, inArray } from "drizzle-orm";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { notify } from "@/lib/telegram";
 
 export async function GET(req: NextRequest) {
   if (!await isAdminAuthenticated()) {
@@ -60,17 +62,53 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { medicationId, staffId, scheduledTime, logDate, status, notes } = await req.json();
+  const { medicationId, staffId, shiftId, scheduledTime, logDate, status, notes } = await req.json();
 
   const [created] = await db.insert(medicationLogs).values({
     medicationId,
-    staffId:       staffId ?? null,
+    staffId:        staffId  ?? null,
+    shiftId:        shiftId  ?? null,
     scheduledTime,
     logDate,
-    status:        status ?? "given",
+    status:         status   ?? "given",
     administeredAt: status === "given" ? new Date() : null,
-    notes:         notes ?? null,
+    notes:          notes    ?? null,
   }).returning();
+
+  // ── Alert engine: medication missed / refused / held ─────────────────────
+  if (status && status !== "given") {
+    try {
+      const [med] = await db
+        .select({ name: medications.name, recipientId: medications.recipientId })
+        .from(medications)
+        .where(eq(medications.id, medicationId));
+
+      if (med) {
+        const [recipient] = await db
+          .select({ name: careRecipients.name })
+          .from(careRecipients)
+          .where(eq(careRecipients.id, med.recipientId));
+
+        const patientName  = recipient?.name ?? `Patient #${med.recipientId}`;
+        const alertMessage = `${med.name} ${status} for ${patientName} at ${scheduledTime} on ${logDate}`;
+
+        // Persist alert (non-blocking)
+        db.insert(alerts).values({
+          type:            "medication_missed",
+          severity:        "high",
+          careRecipientId: med.recipientId,
+          shiftId:         shiftId ?? null,
+          message:         alertMessage,
+          resolved:        false,
+        }).then(() => {}).catch(console.error);
+
+        // Telegram (fire-and-forget)
+        notify.alertMedicationMissed(patientName, scheduledTime).catch(console.error);
+      }
+    } catch (err) {
+      console.error("Alert engine error:", err);
+    }
+  }
 
   return NextResponse.json(created, { status: 201 });
 }

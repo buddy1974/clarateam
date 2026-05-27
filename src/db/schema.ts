@@ -263,6 +263,7 @@ export const medicationLogs = pgTable("medication_logs", {
   id:             serial("id").primaryKey(),
   medicationId:   integer("medication_id").notNull().references(() => medications.id),
   staffId:        integer("staff_id").references(() => staff.id),
+  shiftId:        integer("shift_id").references(() => shifts.id),  // Phase 3
   scheduledTime:  text("scheduled_time").notNull(),
   logDate:        text("log_date").notNull(),
   status:         medLogStatusEnum("status").notNull().default("given"),
@@ -447,8 +448,27 @@ export const taskLogs = pgTable("task_logs", {
   taskId:          integer("task_id").notNull().references(() => careTasks.id),
   careRecipientId: integer("care_recipient_id").notNull().references(() => careRecipients.id),
   staffId:         integer("staff_id").references(() => staff.id),
+  shiftId:         integer("shift_id").references(() => shifts.id),  // Phase 3
   status:          text("status").notNull().default("done"),   // "done" | "skipped"
   notes:           text("notes"),
   logDate:         text("log_date").notNull(),                 // YYYY-MM-DD
+  createdAt:       timestamp("created_at").defaultNow().notNull(),
+});
+
+// ══════════════════════════════════════════════════════════════════════════
+// ── PHASE 3 TABLES — OPERATIONS ENGINE ───────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+
+// ── Table: alerts ─────────────────────────────────────────────────────────
+// Operational alerts — auto-generated from missed meds, skipped tasks, etc.
+
+export const alerts = pgTable("alerts", {
+  id:              serial("id").primaryKey(),
+  type:            text("type").notNull(),        // "medication_missed" | "task_skipped" | "shift_missing"
+  severity:        text("severity").notNull().default("medium"),   // "low" | "medium" | "high"
+  careRecipientId: integer("care_recipient_id").references(() => careRecipients.id),
+  shiftId:         integer("shift_id").references(() => shifts.id),
+  message:         text("message"),
+  resolved:        boolean("resolved").notNull().default(false),
   createdAt:       timestamp("created_at").defaultNow().notNull(),
 });
