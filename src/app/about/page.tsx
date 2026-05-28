@@ -157,7 +157,4 @@ export default function AboutPage() {
       <TestimonialsSection />
       <PageCTA />
       <AIChatWidget />
-      <StickyMobileCTA />
-    </>
-  );
-}
+  

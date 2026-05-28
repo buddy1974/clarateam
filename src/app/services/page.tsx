@@ -138,10 +138,4 @@ export default function ServicesPage() {
       <ServicesHero />
       <ServicesGrid />
       <WhoWeServe />
-      <ServicePromise />
-      <PageCTA />
-      <AIChatWidget />
-      <StickyMobileCTA />
-    </>
-  );
-}
+      <ServicePr

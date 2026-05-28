@@ -222,11 +222,4 @@ export default function ContactPage() {
 
       {/* Footer strip */}
       <div className="border-t border-border bg-white px-4 py-6 text-center text-xs text-foreground/40">
-        © {new Date().getFullYear()} Clara's CareTeam, LLC · {ADDRESS} · DFW Residential Care Staffing · 24/7 On-Call
-      </div>
-
-      <AIChatWidget />
-      <StickyMobileCTA />
-    </>
-  );
-}
+        © {new Date().getFul
