@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db, faqs } from "@/db";
 import { eq, asc } from "drizzle-orm";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const rows = await db

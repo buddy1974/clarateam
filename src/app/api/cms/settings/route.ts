@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { db, siteSettings } from "@/db";
 
-// Public — no auth. Used by the marketing site with ISR.
-export const revalidate = 60; // revalidate every 60 seconds
+// Public — no auth. Used by the marketing site.
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const rows = await db.select().from(siteSettings);
