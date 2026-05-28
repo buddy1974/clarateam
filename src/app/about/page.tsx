@@ -37,7 +37,7 @@ function AboutHero() {
         <h1 className="mt-6 font-serif text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
           Care Rooted in Family
         </h1>
-        <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/75">
+        <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/75 text-justify">
           Clara's CareTeam was founded on a simple belief — every person deserves compassionate, expert care delivered by people who genuinely show up.
         </p>
         <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
@@ -66,7 +66,7 @@ function OurStory() {
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <h2 className="font-serif text-3xl font-bold text-foreground sm:text-4xl">Our Story</h2>
-            <div className="mt-5 space-y-4 text-foreground/65 leading-relaxed">
+            <div className="mt-5 space-y-4 text-foreground/65 leading-relaxed text-justify">
               <p>
                 Clara's CareTeam was born out of a deeply personal understanding of what it means to need reliable, compassionate care — and how hard it can be to find it. Based in the Dallas/Fort Worth metroplex, we set out to bridge that gap.
               </p>
@@ -138,7 +138,7 @@ function OurValues() {
                 <Icon className="h-5 w-5" style={{ color: "oklch(0.30 0.14 332)" }} />
               </div>
               <h3 className="mt-4 text-lg font-bold text-foreground">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-foreground/60">{desc}</p>
+              <p className="mt-2 text-sm leading-relaxed text-foreground/60 text-justify">{desc}</p>
             </div>
           ))}
         </div>

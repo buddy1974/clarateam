@@ -37,7 +37,7 @@ function ServicesHero() {
         <h1 className="mt-6 font-serif text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
           Certified Caregivers for Every Level of Care
         </h1>
-        <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/75">
+        <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-white/75 text-justify">
           From companion care to skilled nursing, we place vetted, credentialed caregivers across DFW — quickly, reliably, and with care.
         </p>
         <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
@@ -83,7 +83,7 @@ function WhoWeServe() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="font-serif text-3xl font-bold text-foreground sm:text-4xl">Who We Serve</h2>
-          <p className="mx-auto mt-4 max-w-xl text-foreground/60">
+          <p className="mx-auto mt-4 max-w-2xl text-foreground/60 text-justify">
             We work with families, facilities, and individuals across Dallas/Fort Worth.
           </p>
         </div>
@@ -95,7 +95,7 @@ function WhoWeServe() {
                 <Icon className="h-6 w-6" style={{ color: "oklch(0.30 0.14 332)" }} />
               </div>
               <h3 className="mt-4 text-lg font-bold text-foreground">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-foreground/60">{desc}</p>
+              <p className="mt-2 text-sm leading-relaxed text-foreground/60 text-justify">{desc}</p>
             </div>
           ))}
         </div>
@@ -109,6 +109,7 @@ function ServicePromise() {
     "Background-checked & credentialed staff",
     "24/7 on-call support",
     "Fast placements — often same or next day",
+    "Care Coordinator responds within 15 minutes",
     "No long-term contracts required",
     "Family-owned and locally operated",
     "Serving 35+ DFW cities",

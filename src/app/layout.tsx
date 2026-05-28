@@ -146,7 +146,7 @@ const JSON_LD = {
       "@type": ["LocalBusiness", "EmploymentAgency"],
       "@id": `${SITE_URL}/#business`,
       name: "Clara's CareTeam, LLC",
-      alternateName: ["Clara's CareTeam", "ClarasCareTeam", "Clara Care Team DFW"],
+      alternateName: ["Clara's CareTeam", "ClarasCareTeam", "ClaraCareTeam DFW"],
       description:
         "Family-owned residential care staffing agency serving the Dallas–Fort Worth Metroplex. We provide PRN coverage, certified CNAs, HHAs, PCAs, memory care specialists, and fractional Directors of Nursing to residential care homes, assisted living facilities, and private clients across DFW.",
       url: SITE_URL,

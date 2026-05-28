@@ -114,6 +114,16 @@ export default function ServicesGrid() {
                 <span className="absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-black shadow">
                   {tag}
                 </span>
+                {/* Clara's CareTeam logo badge on caregiver uniform */}
+                <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-xl bg-white/90 px-2.5 py-1.5 shadow-md backdrop-blur-sm">
+                  <Image
+                    src="/logo2.png"
+                    alt="Clara's CareTeam"
+                    width={48}
+                    height={54}
+                    className="h-7 w-auto"
+                  />
+                </div>
               </div>
 
               {/* Content */}
@@ -122,7 +132,7 @@ export default function ServicesGrid() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <h3 className="font-serif text-lg font-bold text-primary">{title}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-foreground/70">{desc}</p>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-foreground/70 text-justify">{desc}</p>
               </div>
             </motion.div>
           ))}
@@ -144,7 +154,7 @@ export default function ServicesGrid() {
               <h3 className="mt-4 font-serif text-2xl font-bold text-primary sm:text-3xl">
                 Compliance-Ready. Every Shift.
               </h3>
-              <p className="mt-3 text-base text-foreground/70">
+              <p className="mt-3 text-base text-foreground/70 text-justify">
                 Every placement arrives documentation-complete and competency-verified.
               </p>
               <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">

@@ -19,10 +19,11 @@ const CONTACT_CARDS = [
 ];
 
 const HOURS = [
-  { day: "Monday – Friday",   time: "8:00 AM – 6:00 PM" },
-  { day: "Saturday",          time: "9:00 AM – 3:00 PM" },
-  { day: "Sunday",            time: "On-call available" },
-  { day: "Urgent / 24-hour",  time: "Call anytime — we answer" },
+  { day: "Monday – Friday",           time: "8:00 AM – 6:00 PM" },
+  { day: "Saturday",                   time: "9:00 AM – 3:00 PM" },
+  { day: "Sunday",                     time: "On-call available" },
+  { day: "Urgent / 24-hour",          time: "Call anytime — we answer" },
+  { day: "Care Coordinator Response",  time: "Within 15 minutes" },
 ];
 
 const SUBJECTS = [
@@ -68,10 +69,10 @@ export default function ContactPage() {
           <span className="inline-block rounded-full bg-accent/15 px-4 py-1.5 text-xs font-extrabold uppercase tracking-widest text-accent">
             Contact Us
           </span>
-          <h1 className="mt-6 font-serif text-4xl font-bold text-white sm:text-5xl">
+          <h1 className="mt-6 font-serif text-2xl font-bold text-white sm:text-4xl lg:text-5xl whitespace-nowrap">
             We're Here When You Need Us
           </h1>
-          <p className="mx-auto mt-4 max-w-lg text-lg leading-relaxed text-white/75">
+          <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-white/75 text-justify">
             Call, email, or fill out the form below. For urgent care needs, call us directly — we answer 24/7.
           </p>
         </div>
@@ -112,7 +113,7 @@ export default function ContactPage() {
             {/* Contact form */}
             <div className="lg:col-span-3">
               <h2 className="font-serif text-2xl font-bold text-foreground sm:text-3xl">Send Us a Message</h2>
-              <p className="mt-2 text-sm text-foreground/55">We typically respond within a few hours during business hours.</p>
+              <p className="mt-2 text-sm text-foreground/55 text-justify">We typically respond within a few hours during business hours.</p>
 
               {status === "sent" ? (
                 <div className="mt-8 rounded-2xl border border-green-200 bg-green-50 p-8 text-center">
@@ -186,7 +187,7 @@ export default function ContactPage() {
             {/* Hours */}
             <div className="lg:col-span-2">
               <h2 className="font-serif text-2xl font-bold text-foreground sm:text-3xl">Office Hours</h2>
-              <p className="mt-2 text-sm text-foreground/55">We're available beyond these hours for urgent care needs.</p>
+              <p className="mt-2 text-sm text-foreground/55 text-justify">We're available beyond these hours for urgent care needs.</p>
 
               <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
                 {HOURS.map(({ day, time }, i) => (

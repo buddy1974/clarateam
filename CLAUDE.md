@@ -6,7 +6,7 @@ Run this single command to get everything ready:
 
 ```
 git add -A
-git commit -m "feat: Mobile optimization — admin panels, chat widget, iOS safe-area, care plans mobile nav"
+git commit -m "fix: Kevin's website feedback — justify text, one-line heading, logo badge on caregiver photos, 15-min response time, extend sentence boxes"
 git push
 ```
 
