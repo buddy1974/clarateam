@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
+import { authenticator } from "otplib";
 import { signAdminToken } from "@/lib/admin-auth";
 
 export async function POST(req: NextRequest) {
-  const { pin } = await req.json();
-  const correct = process.env.ADMIN_PIN ?? "clara2025";
+  const { code } = await req.json();
 
-  if (pin !== correct) {
-    return NextResponse.json({ error: "Wrong PIN" }, { status: 401 });
+  const secret = process.env.TOTP_SECRET;
+  if (!secret) {
+    return NextResponse.json({ error: "TOTP not configured" }, { status: 500 });
+  }
+
+  const isValid = authenticator.verify({ token: String(code).trim(), secret });
+  if (!isValid) {
+    return NextResponse.json({ error: "Invalid code" }, { status: 401 });
   }
 
   const token = await signAdminToken();

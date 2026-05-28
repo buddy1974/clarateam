@@ -6,7 +6,7 @@ Run this single command to get everything ready:
 
 ```
 git add -A
-git commit -m "fix: Kevin's website feedback — justify text, one-line heading, logo badge on caregiver photos, 15-min response time, extend sentence boxes"
+git commit -m "feat: TOTP authenticator login — replace PIN with 6-digit app-based auth, setup QR page"
 git push
 ```
 
@@ -21,9 +21,11 @@ After pushing, remind the user to add these in Vercel → Project Settings → E
 - TELEGRAM_CHAT_IDS  — comma-separated chat IDs (Jessica + Kevin)
 - RESEND_API_KEY     — from resend.com
 - IMAP_PASS          — password for info@claracareteam.com
-- ADMIN_PIN          — PIN to access /admin (e.g. clara2025)
 - ADMIN_SECRET       — any long random string (32+ chars)
+- TOTP_SECRET        — base32 TOTP shared secret (generate with: node -e "const {authenticator}=require('otplib');console.log(authenticator.generateSecret())")
+- SETUP_TOKEN        — any random string — gates /admin/setup-totp QR page (REMOVE after all users have scanned)
 - ANTHROPIC_API_KEY  — from console.anthropic.com (for AI Tools in /admin/ai)
+- (ADMIN_PIN deprecated — replaced by TOTP authenticator app)
 
 ## Project context
 
