@@ -1,5 +1,5 @@
 import Image from "next/image";
-import QRCode from "qrcode";
+import { toDataURL } from "qrcode";
 import { Shield, Smartphone, CheckCircle2 } from "lucide-react";
 
 export default async function SetupTOTP() {
@@ -21,7 +21,7 @@ export default async function SetupTOTP() {
   let qrDataUrl = "";
   if (secret) {
     try {
-      qrDataUrl = await QRCode.toDataURL(otpauthUrl, {
+      qrDataUrl = await toDataURL(otpauthUrl, {
         width: 220,
         margin: 1,
         color: { dark: "#000000", light: "#ffffff" },
