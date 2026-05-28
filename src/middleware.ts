@@ -14,6 +14,7 @@ export async function middleware(req: NextRequest) {
 
   // Public admin routes — always allow
   if (pathname === "/admin/login") return NextResponse.next();
+  if (pathname === "/admin/setup-totp") return NextResponse.next();
 
   // API routes handle their own auth internally — don't double-redirect
   if (pathname.startsWith("/api/")) return NextResponse.next();
