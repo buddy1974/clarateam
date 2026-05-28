@@ -6,7 +6,7 @@ Run this single command to get everything ready:
 
 ```
 git add -A
-git commit -m "feat: multi-user RBAC — per-user TOTP, personalized greeting, role-gated nav, users page"
+git commit -m "feat: setup-totp back to shared page — all three QR cards shown together"
 git push
 ```
 

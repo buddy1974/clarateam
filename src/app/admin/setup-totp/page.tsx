@@ -2,7 +2,7 @@ import Image from "next/image";
 import { toDataURL } from "qrcode";
 import { Shield, Smartphone, CheckCircle2 } from "lucide-react";
 
-// Per-user TOTP secrets — these are baked in at build time for the setup page.
+// Per-user TOTP secrets — baked in at build time.
 // Once everyone has scanned, remove SETUP_TOKEN from Vercel to disable this page.
 const USERS = [
   { name: "kevin",   display: "Kevin James Dean",  secret: "2UCCHCUJFCDAF5VFCIXR" },
@@ -66,8 +66,7 @@ export default async function SetupTOTP() {
         </div>
 
         <p className="text-center text-sm text-white/50 mb-8">
-          Each person scans <strong className="text-white/70">only their own QR code</strong>.
-          Use Google Authenticator, Authy, or Microsoft Authenticator.
+          Each person scans <strong className="text-white/70">only their own QR code</strong>. Use Google Authenticator, Authy, or Microsoft Authenticator.
         </p>
 
         {/* Per-user QR cards */}
