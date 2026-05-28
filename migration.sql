@@ -365,3 +365,22 @@ CREATE TABLE IF NOT EXISTS site_settings (
   value      TEXT,
   updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+-- ─── ADMIN USERS (multi-user RBAC) ───────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS admin_users (
+  id           SERIAL PRIMARY KEY,
+  name         TEXT NOT NULL UNIQUE,          -- login identifier e.g. "kevin"
+  display_name TEXT NOT NULL,                 -- greeting name e.g. "Kevin James Dean"
+  role         TEXT NOT NULL DEFAULT 'administrator',  -- 'super_admin' | 'administrator'
+  totp_secret  TEXT NOT NULL,                 -- base32 per-user TOTP secret
+  active       BOOLEAN NOT NULL DEFAULT TRUE,
+  last_login   TIMESTAMP,
+  created_at   TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+-- Seed initial users (upsert-safe — won't duplicate on re-run)
+INSERT INTO admin_users (name, display_name, role, totp_secret) VALUES
+  ('kevin',   'Kevin James Dean',  'super_admin',   '2UCCHCUJFCDAF5VFCIXR'),
+  ('jessica', 'Jessica',           'super_admin',   'OG2ZDERALN2Q6BHUSTEL'),
+  ('carter',  'Chantay Carter',    'administrator', 'K6QF6IV33NMANL4V7FNH')
+ON CONFLICT (name) DO NOTHING;

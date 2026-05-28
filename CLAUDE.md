@@ -6,7 +6,7 @@ Run this single command to get everything ready:
 
 ```
 git add -A
-git commit -m "fix: restore truncated files + qrcode server-side QR, complete schema, TOTP auth"
+git commit -m "feat: multi-user RBAC — per-user TOTP, personalized greeting, role-gated nav, users page"
 git push
 ```
 

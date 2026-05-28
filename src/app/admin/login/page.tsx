@@ -3,9 +3,16 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Shield, Smartphone } from "lucide-react";
+import { Shield, Smartphone, ChevronDown } from "lucide-react";
+
+const USERS = [
+  { handle: "kevin",   label: "Kevin James Dean" },
+  { handle: "jessica", label: "Jessica" },
+  { handle: "carter",  label: "Chantay Carter" },
+];
 
 export default function AdminLogin() {
+  const [handle, setHandle]   = useState(USERS[0].handle);
   const [digits, setDigits]   = useState(["", "", "", "", "", ""]);
   const [error, setError]     = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,7 +27,7 @@ export default function AdminLogin() {
     const res = await fetch("/api/admin/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ handle, code }),
     });
     if (res.ok) {
       router.push("/admin");
@@ -56,6 +63,13 @@ export default function AdminLogin() {
     if (pasted.length === 6) { setDigits(pasted.split("")); submit(pasted); }
   }
 
+  function handleUserChange(newHandle: string) {
+    setHandle(newHandle);
+    setDigits(["", "", "", "", "", ""]);
+    setError("");
+    setTimeout(() => inputRefs.current[0]?.focus(), 50);
+  }
+
   const code = digits.join("");
 
   return (
@@ -82,10 +96,33 @@ export default function AdminLogin() {
           style={{ background: "rgba(255,255,255,0.07)" }}>
           <h2 className="mb-1 text-center font-serif text-xl font-bold text-white">ClaraCare OS</h2>
 
-          <div className="mb-6 mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+          {/* User selector */}
+          <div className="mb-5 mt-4">
+            <label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-white/50">
+              Who&apos;s signing in?
+            </label>
+            <div className="relative">
+              <select
+                value={handle}
+                onChange={(e) => handleUserChange(e.target.value)}
+                disabled={loading}
+                className="w-full appearance-none rounded-xl border border-white/20 bg-white/10 px-4 py-3 pr-10 text-sm font-semibold text-white outline-none transition-all focus:border-amber-400/70 focus:ring-2 focus:ring-amber-400/20 disabled:opacity-40"
+                style={{ colorScheme: "dark" }}
+              >
+                {USERS.map((u) => (
+                  <option key={u.handle} value={u.handle} style={{ background: "#1a0a1e", color: "#fff" }}>
+                    {u.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+            </div>
+          </div>
+
+          <div className="mb-5 flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
             <Smartphone className="mt-0.5 h-4 w-4 shrink-0 text-amber-400/80" />
             <p className="text-xs leading-relaxed text-white/55">
-              Open your authenticator app — Google Authenticator, Authy, or Microsoft Authenticator — and enter the 6-digit code.
+              Open your authenticator app and enter the 6-digit code for your account.
             </p>
           </div>
 

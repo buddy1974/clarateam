@@ -2,9 +2,25 @@ import Image from "next/image";
 import { toDataURL } from "qrcode";
 import { Shield, Smartphone, CheckCircle2 } from "lucide-react";
 
+// Per-user TOTP secrets — these are baked in at build time for the setup page.
+// Once everyone has scanned, remove SETUP_TOKEN from Vercel to disable this page.
+const USERS = [
+  { name: "kevin",   display: "Kevin James Dean",  secret: "2UCCHCUJFCDAF5VFCIXR" },
+  { name: "jessica", display: "Jessica",            secret: "OG2ZDERALN2Q6BHUSTEL" },
+  { name: "carter",  display: "Chantay Carter",     secret: "K6QF6IV33NMANL4V7FNH" },
+];
+
+async function makeQR(secret: string, account: string): Promise<string> {
+  const url = `otpauth://totp/ClaraCare%20OS:${encodeURIComponent(account)}?secret=${secret}&issuer=ClaraCareTeam&algorithm=SHA1&digits=6&period=30`;
+  try {
+    return await toDataURL(url, { width: 200, margin: 1, color: { dark: "#000000", light: "#ffffff" } });
+  } catch {
+    return "";
+  }
+}
+
 export default async function SetupTOTP() {
-  const secret = process.env.TOTP_SECRET ?? "";
-  const token  = process.env.SETUP_TOKEN  ?? "";
+  const token = process.env.SETUP_TOKEN ?? "";
 
   // Page only active when SETUP_TOKEN is set
   if (!token) {
@@ -16,25 +32,15 @@ export default async function SetupTOTP() {
     );
   }
 
-  // Generate QR code as base64 data URL server-side (no external API)
-  const otpauthUrl = `otpauth://totp/ClaraCare%20OS?secret=${secret}&issuer=ClaraCareTeam&algorithm=SHA1&digits=6&period=30`;
-  let qrDataUrl = "";
-  if (secret) {
-    try {
-      qrDataUrl = await toDataURL(otpauthUrl, {
-        width: 220,
-        margin: 1,
-        color: { dark: "#000000", light: "#ffffff" },
-      });
-    } catch {
-      qrDataUrl = "";
-    }
-  }
+  // Generate all QR codes server-side in parallel
+  const usersWithQR = await Promise.all(
+    USERS.map(async (u) => ({ ...u, qr: await makeQR(u.secret, u.display) }))
+  );
 
   const apps = [
-    { name: "Google Authenticator", store: "App Store / Google Play" },
-    { name: "Authy",                store: "App Store / Google Play" },
-    { name: "Microsoft Authenticator", store: "App Store / Google Play" },
+    "Google Authenticator",
+    "Authy",
+    "Microsoft Authenticator",
   ];
 
   return (
@@ -45,7 +51,7 @@ export default async function SetupTOTP() {
       <div className="pointer-events-none absolute inset-0 opacity-20"
         style={{ background: "radial-gradient(ellipse 60% 40% at 50% 30%, oklch(0.74 0.14 75 / 0.25), transparent)" }} />
 
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full max-w-2xl">
 
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center">
@@ -55,48 +61,55 @@ export default async function SetupTOTP() {
           </div>
           <div className="mt-3 flex items-center gap-2">
             <Shield className="h-3.5 w-3.5 text-amber-400/70" />
-            <span className="text-xs font-bold uppercase tracking-widest text-white/50">One-Time Setup</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-white/50">One-Time Authenticator Setup</span>
           </div>
         </div>
 
-        {/* Card */}
-        <div className="rounded-2xl border border-white/10 p-8 shadow-2xl backdrop-blur-xl"
-          style={{ background: "rgba(255,255,255,0.07)" }}>
+        <p className="text-center text-sm text-white/50 mb-8">
+          Each person scans <strong className="text-white/70">only their own QR code</strong>.
+          Use Google Authenticator, Authy, or Microsoft Authenticator.
+        </p>
 
-          <h2 className="text-center font-serif text-xl font-bold text-white mb-1">Set Up Your Authenticator</h2>
-          <p className="text-center text-xs text-white/45 mb-6">
-            Each person does this once. Use any authenticator app.
-          </p>
+        {/* Per-user QR cards */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {usersWithQR.map(({ name, display, secret, qr }) => (
+            <div key={name} className="rounded-2xl border border-white/10 p-6 shadow-xl backdrop-blur-xl flex flex-col items-center gap-4"
+              style={{ background: "rgba(255,255,255,0.07)" }}>
+              <p className="text-sm font-bold text-white text-center">{display}</p>
 
-          {/* QR Code */}
-          {qrDataUrl ? (
-            <div className="flex flex-col items-center">
-              <div className="rounded-xl bg-white p-3 shadow-lg">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={qrDataUrl} alt="TOTP QR Code" width={220} height={220} />
-              </div>
-              <p className="mt-3 text-center text-xs text-white/40">Scan with your authenticator app</p>
+              {qr ? (
+                <>
+                  <div className="rounded-xl bg-white p-2.5 shadow-lg">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={qr} alt={`QR for ${display}`} width={200} height={200} />
+                  </div>
+                  <div className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center">
+                    <p className="text-[9px] font-bold uppercase tracking-widest text-white/30 mb-1">Manual key</p>
+                    <p className="font-mono text-xs font-bold tracking-widest text-amber-300 break-all">{secret}</p>
+                  </div>
+                </>
+              ) : (
+                <p className="text-xs text-red-300">QR generation failed</p>
+              )}
 
-              {/* Manual entry fallback */}
-              <div className="mt-4 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                <p className="text-center text-[10px] font-bold uppercase tracking-widest text-white/35 mb-1">Or enter code manually</p>
-                <p className="text-center font-mono text-sm font-bold tracking-widest text-amber-300 break-all">{secret}</p>
-              </div>
+              <p className="text-[10px] text-white/30 text-center">
+                Login handle: <span className="text-white/50 font-mono">{name}</span>
+              </p>
             </div>
-          ) : (
-            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center">
-              <p className="text-sm text-red-300 font-semibold">TOTP_SECRET not set in environment variables.</p>
-              <p className="text-xs text-red-300/60 mt-1">Add TOTP_SECRET to Vercel → Project Settings → Environment Variables, then redeploy.</p>
-            </div>
-          )}
+          ))}
+        </div>
 
-          {/* Steps */}
-          <div className="mt-6 space-y-3">
+        {/* Steps */}
+        <div className="mt-8 rounded-2xl border border-white/10 p-6 backdrop-blur-xl"
+          style={{ background: "rgba(255,255,255,0.05)" }}>
+          <h3 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-4">Setup Steps</h3>
+          <div className="space-y-3">
             {[
-              "Download any authenticator app (see below)",
+              "Download an authenticator app (see compatible apps below)",
               "Tap + or Add Account in the app",
-              "Scan the QR code above",
-              "The app will show a 6-digit code — use that to log in",
+              "Scan only YOUR QR code above — do not scan anyone else's",
+              "The app will show a 6-digit code that changes every 30 seconds",
+              "Use that code on the login page along with your name",
             ].map((step, i) => (
               <div key={i} className="flex items-start gap-3">
                 <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-400/20 text-[10px] font-bold text-amber-400 mt-0.5">
@@ -107,32 +120,30 @@ export default async function SetupTOTP() {
             ))}
           </div>
 
-          {/* App list */}
-          <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Smartphone className="h-4 w-4 text-amber-400/70" />
-              <span className="text-xs font-bold uppercase tracking-widest text-white/40">Compatible Apps</span>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <div className="flex items-center gap-1.5">
+              <Smartphone className="h-3.5 w-3.5 text-amber-400/60" />
+              <span className="text-xs font-bold uppercase tracking-widest text-white/35">Compatible Apps</span>
             </div>
-            <div className="space-y-2">
-              {apps.map(({ name, store }) => (
-                <div key={name} className="flex items-center gap-2">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-amber-400/60 shrink-0" />
-                  <span className="text-sm text-white/70 font-semibold">{name}</span>
-                  <span className="text-xs text-white/30 ml-auto">{store}</span>
-                </div>
-              ))}
-            </div>
+            {apps.map((app) => (
+              <div key={app} className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-amber-400/60 shrink-0" />
+                <span className="text-xs text-white/60">{app}</span>
+              </div>
+            ))}
           </div>
+        </div>
 
+        <div className="mt-6 flex justify-center">
           <a href="/admin/login"
-            className="mt-6 flex w-full items-center justify-center rounded-full py-3 text-sm font-bold text-black transition-all hover:brightness-110"
+            className="rounded-full px-8 py-3 text-sm font-bold text-black transition-all hover:brightness-110"
             style={{ background: "oklch(0.74 0.14 75)" }}>
             Go to Login →
           </a>
         </div>
 
         <p className="mt-5 text-center text-[11px] text-white/20">
-          Remove SETUP_TOKEN from Vercel env vars when all users have scanned.
+          Remove SETUP_TOKEN from Vercel env vars once everyone has scanned their QR code.
         </p>
       </div>
     </div>

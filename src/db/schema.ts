@@ -407,3 +407,17 @@ export const siteSettings = pgTable("site_settings", {
   value:     text("value"),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+// ── Table: users ───────────────────────────────────────────────────────────
+// Named admin users with per-user TOTP secrets and role-based access
+
+export const adminUsers = pgTable("admin_users", {
+  id:          serial("id").primaryKey(),
+  name:        text("name").notNull(),
+  displayName: text("display_name").notNull(),
+  role:        text("role").notNull().default("administrator"), // 'super_admin' | 'administrator'
+  totpSecret:  text("totp_secret").notNull(),
+  active:      boolean("active").notNull().default(true),
+  lastLogin:   timestamp("last_login"),
+  createdAt:   timestamp("created_at").defaultNow().notNull(),
+});

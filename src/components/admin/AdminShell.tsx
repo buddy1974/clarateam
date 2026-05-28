@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard, Users, Building2, ClipboardList,
   Mail, Calendar, Pill, Receipt, Palette, LogOut,
@@ -12,59 +13,96 @@ import {
 
 // ── Navigation config ──────────────────────────────────────────────
 
-const PRIMARY_NAV = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/intake",    label: "Intake",     icon: Upload },
-  { href: "/admin/drafts",    label: "Drafts",     icon: ClipboardCheck },
-  { href: "/admin/search",    label: "Search",     icon: Search },
+type NavItem = {
+  href: string;
+  label: string;
+  icon: React.ElementType;
+  superAdminOnly?: boolean;
+};
+
+const PRIMARY_NAV: NavItem[] = [
+  { href: "/admin/dashboard", label: "Dashboard",  icon: LayoutDashboard },
+  { href: "/admin/intake",    label: "Intake",      icon: Upload },
+  { href: "/admin/drafts",    label: "Drafts",      icon: ClipboardCheck },
+  { href: "/admin/search",    label: "Search",      icon: Search },
   { href: "/admin/operations", label: "Operations", icon: Activity },
   { href: "/admin/alerts",     label: "Alerts",     icon: AlertTriangle },
-  { href: "/admin/recipients",  label: "Recipients",  icon: Heart },
-  { href: "/admin/care-plans",  label: "Care Plans",  icon: ClipboardCheck },
-  { href: "/admin/staff",       label: "Staff",       icon: Users },
-  { href: "/admin/clients",     label: "Clients",     icon: Building2 },
-  { href: "/admin/requests",    label: "Requests",    icon: ClipboardList },
-  { href: "/admin/inbox",       label: "Inbox",       icon: Mail },
-  { href: "/admin/rota",        label: "Rota",        icon: Calendar },
-  { href: "/admin/medication",  label: "Medication",  icon: Pill },
-  { href: "/admin/billing",     label: "Billing",     icon: Receipt },
-  { href: "/admin/reports",     label: "Reports",     icon: FileText },
-  { href: "/admin/compliance",  label: "Compliance",  icon: ShieldCheck },
-  { href: "/admin/ai",          label: "AI Tools",    icon: Sparkles },
-  { href: "/admin/cms",         label: "CMS",         icon: Palette },
-] as const;
-
-const SOON_NAV: never[] = [];
+  { href: "/admin/recipients", label: "Recipients", icon: Heart },
+  { href: "/admin/care-plans", label: "Care Plans", icon: ClipboardCheck },
+  { href: "/admin/staff",      label: "Staff",      icon: Users },
+  { href: "/admin/clients",    label: "Clients",    icon: Building2 },
+  { href: "/admin/requests",   label: "Requests",   icon: ClipboardList },
+  { href: "/admin/inbox",      label: "Inbox",      icon: Mail },
+  { href: "/admin/rota",       label: "Rota",       icon: Calendar },
+  { href: "/admin/medication", label: "Medication", icon: Pill },
+  { href: "/admin/billing",    label: "Billing",    icon: Receipt,    superAdminOnly: true },
+  { href: "/admin/reports",    label: "Reports",    icon: FileText },
+  { href: "/admin/compliance", label: "Compliance", icon: ShieldCheck, superAdminOnly: true },
+  { href: "/admin/ai",         label: "AI Tools",   icon: Sparkles },
+  { href: "/admin/cms",        label: "CMS",        icon: Palette },
+  { href: "/admin/users",      label: "Users",      icon: Users,   superAdminOnly: true },
+];
 
 const PAGE_TITLE: Record<string, string> = {
   "/admin/dashboard":  "Dashboard",
   "/admin/intake":     "Intake",
   "/admin/drafts":     "Drafts",
-  "/admin/search":      "Search",
-  "/admin/operations":  "Operations",
-  "/admin/alerts":      "Alerts",
-  "/admin/recipients":  "Recipients",
-  "/admin/care-plans":  "Care Plans",
-  "/admin/staff":       "Staff",
-  "/admin/clients":     "Clients",
-  "/admin/requests":    "Requests",
-  "/admin/inbox":       "Inbox",
-  "/admin/rota":        "Rota",
-  "/admin/medication":  "Medication",
-  "/admin/billing":     "Billing",
-  "/admin/reports":     "Reports",
-  "/admin/compliance":  "Compliance",
-  "/admin/ai":          "AI Tools",
-  "/admin/cms":         "CMS",
+  "/admin/search":     "Search",
+  "/admin/operations": "Operations",
+  "/admin/alerts":     "Alerts",
+  "/admin/recipients": "Recipients",
+  "/admin/care-plans": "Care Plans",
+  "/admin/staff":      "Staff",
+  "/admin/clients":    "Clients",
+  "/admin/requests":   "Requests",
+  "/admin/inbox":      "Inbox",
+  "/admin/rota":       "Rota",
+  "/admin/medication": "Medication",
+  "/admin/billing":    "Billing",
+  "/admin/reports":    "Reports",
+  "/admin/compliance": "Compliance",
+  "/admin/ai":         "AI Tools",
+  "/admin/cms":        "CMS",
+  "/admin/users":      "Users",
 };
+
+function greeting(name: string): string {
+  const h = new Date().getHours();
+  const tod = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+  return `${tod}, ${name.split(" ")[0]}`;
+}
 
 // ══════════════════════════════════════════════════════════════════
 
+interface SessionInfo {
+  userId:     number;
+  userName:   string;
+  userRole:   string;
+  userHandle: string;
+}
+
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [session, setSession] = useState<SessionInfo | null>(null);
 
-  // Login page — pass through with no chrome
-  if (pathname === "/admin/login") return <>{children}</>;
+  useEffect(() => {
+    // Skip for login / setup pages
+    if (pathname === "/admin/login" || pathname === "/admin/setup-totp") return;
+    fetch("/api/admin/me")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (data) setSession(data); })
+      .catch(() => {});
+  }, [pathname]);
+
+  // Login / setup pages — pass through with no chrome
+  if (pathname === "/admin/login" || pathname === "/admin/setup-totp") return <>{children}</>;
+
+  const isSuperAdmin = session?.userRole === "super_admin";
+
+  // Filter nav based on role (while session is loading, show all — server middleware already guards access)
+  const visibleNav = session
+    ? PRIMARY_NAV.filter((item) => !item.superAdminOnly || isSuperAdmin)
+    : PRIMARY_NAV;
 
   const title =
     Object.entries(PAGE_TITLE).find(([key]) => pathname.startsWith(key))?.[1] ?? "Admin";
@@ -108,13 +146,21 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           </Link>
         </div>
 
+        {/* Greeting */}
+        {session && (
+          <div className="shrink-0 border-b border-gray-100 px-4 py-3">
+            <p className="text-[11px] text-gray-400 font-medium">{greeting(session.userName)}</p>
+            <p className="text-[10px] text-gray-300 mt-0.5 capitalize">{session.userRole.replace("_", " ")}</p>
+          </div>
+        )}
+
         {/* Primary nav */}
-        <nav className="flex-1 overflow-y-auto px-3 py-5">
+        <nav className="flex-1 overflow-y-auto px-3 py-4">
           <p className="mb-2 px-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
             Navigation
           </p>
           <div className="space-y-0.5">
-            {PRIMARY_NAV.map(({ href, label, icon: Icon }) => {
+            {visibleNav.map(({ href, label, icon: Icon }) => {
               const active = isActive(href);
               return (
                 <Link
@@ -133,8 +179,6 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               );
             })}
           </div>
-
-          {/* All phases complete — no locked items */}
         </nav>
 
         {/* Logout */}
@@ -167,7 +211,12 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 className="h-6 w-auto"
               />
             </div>
-            <span className="font-bold text-gray-700 text-sm">{title}</span>
+            <div>
+              <span className="font-bold text-gray-700 text-sm">{title}</span>
+              {session && (
+                <p className="text-[10px] text-gray-400 leading-none mt-0.5">{greeting(session.userName)}</p>
+              )}
+            </div>
           </div>
           <button
             onClick={logout}
@@ -186,7 +235,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       {/* ── Mobile bottom nav ── */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white pb-safe md:hidden">
         <div className="flex overflow-x-auto scrollbar-none">
-          {PRIMARY_NAV.map(({ href, label, icon: Icon }) => {
+          {visibleNav.map(({ href, label, icon: Icon }) => {
             const active = isActive(href);
             return (
               <Link
