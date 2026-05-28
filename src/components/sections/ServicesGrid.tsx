@@ -170,4 +170,18 @@ export default function ServicesGrid() {
               className="flex min-h-[180px] flex-col items-center justify-center p-8 text-white lg:col-span-2"
               style={{ background: "var(--gradient-vibrant)" }}
             >
-              <Shield className="h-14 w-14 opac
+              <Shield className="h-14 w-14 opacity-90" />
+              <div className="mt-4 text-center">
+                <div className="text-5xl font-extrabold">100%</div>
+                <div className="mt-1 text-base font-bold opacity-90">Pre-screened & verified</div>
+                <div className="mt-2 text-xs font-bold uppercase tracking-widest opacity-65">
+                  Every placement, every time
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}

@@ -6,7 +6,7 @@ Run this single command to get everything ready:
 
 ```
 git add -A
-git commit -m "feat: complete DB schema — all 20 tables, migration.sql for Neon"
+git commit -m "fix: restore truncated files + qrcode server-side QR, complete schema, TOTP auth"
 git push
 ```
 
@@ -27,4 +27,9 @@ After pushing, remind the user to add these in Vercel → Project Settings → E
 - ANTHROPIC_API_KEY  — from console.anthropic.com (for AI Tools in /admin/ai)
 - (ADMIN_PIN deprecated — replaced by TOTP authenticator app)
 
-## Project con
+## Project context
+
+Next.js 14 App Router, Tailwind v4, Framer Motion, Neon + Drizzle ORM.
+Admin dashboard lives at /admin (PIN protected).
+Caregiver application form lives at /caregiving-opportunities.
+All new submissions → Neon DB + Telegram notification + Resend confirmation email.
