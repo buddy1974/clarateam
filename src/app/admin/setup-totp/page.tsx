@@ -1,7 +1,8 @@
 import Image from "next/image";
+import QRCode from "qrcode";
 import { Shield, Smartphone, CheckCircle2 } from "lucide-react";
 
-export default function SetupTOTP() {
+export default async function SetupTOTP() {
   const secret = process.env.TOTP_SECRET ?? "";
   const token  = process.env.SETUP_TOKEN  ?? "";
 
@@ -15,8 +16,20 @@ export default function SetupTOTP() {
     );
   }
 
+  // Generate QR code as base64 data URL server-side (no external API)
   const otpauthUrl = `otpauth://totp/ClaraCare%20OS?secret=${secret}&issuer=ClaraCareTeam&algorithm=SHA1&digits=6&period=30`;
-  const qrUrl = `https://chart.googleapis.com/chart?chs=220x220&chld=M|0&cht=qr&chl=${encodeURIComponent(otpauthUrl)}`;
+  let qrDataUrl = "";
+  if (secret) {
+    try {
+      qrDataUrl = await QRCode.toDataURL(otpauthUrl, {
+        width: 220,
+        margin: 1,
+        color: { dark: "#000000", light: "#ffffff" },
+      });
+    } catch {
+      qrDataUrl = "";
+    }
+  }
 
   const apps = [
     { name: "Google Authenticator", store: "App Store / Google Play" },
@@ -56,11 +69,11 @@ export default function SetupTOTP() {
           </p>
 
           {/* QR Code */}
-          {secret ? (
+          {qrDataUrl ? (
             <div className="flex flex-col items-center">
               <div className="rounded-xl bg-white p-3 shadow-lg">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={qrUrl} alt="TOTP QR Code" width={220} height={220} />
+                <img src={qrDataUrl} alt="TOTP QR Code" width={220} height={220} />
               </div>
               <p className="mt-3 text-center text-xs text-white/40">Scan with your authenticator app</p>
 
