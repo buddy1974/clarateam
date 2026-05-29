@@ -5,15 +5,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Shield, Smartphone, ChevronDown } from "lucide-react";
 
-const USERS = [
-  { handle: "kevin",   label: "Kevin James Dean" },
-  { handle: "jessica", label: "Jessica" },
-  { handle: "carter",  label: "Chantay Carter" },
-  { handle: "marcel",  label: "Marcel" },
-];
+type RosterUser = { handle: string; label: string };
 
 export default function AdminLogin() {
-  const [handle, setHandle]   = useState(USERS[0].handle);
+  const [users, setUsers]     = useState<RosterUser[]>([]);
+  const [handle, setHandle]   = useState("");
   const [digits, setDigits]   = useState(["", "", "", "", "", ""]);
   const [error, setError]     = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +18,19 @@ export default function AdminLogin() {
 
   useEffect(() => { inputRefs.current[0]?.focus(); }, []);
 
+  // Roster is driven by the admin_users table — no hardcoded user list.
+  useEffect(() => {
+    fetch("/api/admin/roster")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data: RosterUser[]) => {
+        setUsers(data);
+        if (data.length) setHandle(data[0].handle);
+      })
+      .catch(() => {});
+  }, []);
+
   async function submit(code: string) {
+    if (!handle) return; // roster not loaded yet
     setLoading(true);
     setError("");
     const res = await fetch("/api/admin/login", {
@@ -110,11 +118,17 @@ export default function AdminLogin() {
                 className="w-full appearance-none rounded-xl border border-white/20 bg-white/10 px-4 py-3 pr-10 text-sm font-semibold text-white outline-none transition-all focus:border-amber-400/70 focus:ring-2 focus:ring-amber-400/20 disabled:opacity-40"
                 style={{ colorScheme: "dark" }}
               >
-                {USERS.map((u) => (
-                  <option key={u.handle} value={u.handle} style={{ background: "#1a0a1e", color: "#fff" }}>
-                    {u.label}
+                {users.length === 0 ? (
+                  <option value="" style={{ background: "#1a0a1e", color: "#fff" }}>
+                    Loading…
                   </option>
-                ))}
+                ) : (
+                  users.map((u) => (
+                    <option key={u.handle} value={u.handle} style={{ background: "#1a0a1e", color: "#fff" }}>
+                      {u.label}
+                    </option>
+                  ))
+                )}
               </select>
               <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
             </div>
@@ -155,7 +169,7 @@ export default function AdminLogin() {
 
           <button
             onClick={() => code.length === 6 && submit(code)}
-            disabled={loading || code.length < 6}
+            disabled={loading || code.length < 6 || !handle}
             className="mt-5 w-full rounded-full py-3.5 text-sm font-extrabold text-black transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-40"
             style={{ background: "oklch(0.74 0.14 75)" }}
           >
