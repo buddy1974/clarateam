@@ -9,6 +9,7 @@ const USERS = [
   { handle: "kevin",   label: "Kevin James Dean" },
   { handle: "jessica", label: "Jessica" },
   { handle: "carter",  label: "Chantay Carter" },
+  { handle: "marcel",  label: "Marcel" },
 ];
 
 export default function AdminLogin() {
