@@ -30,6 +30,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
+  // Tolerate +/-1 time step (30s) of clock skew between the user's phone
+  // and the server. Default window is 0 (exact step only), which rejects
+  // valid codes when clocks drift even slightly.
+  authenticator.options = { window: 1 };
+
   // Verify the TOTP code against THIS user's personal secret
   const isValid = authenticator.verify({
     token: String(code).trim(),
