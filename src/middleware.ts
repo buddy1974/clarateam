@@ -5,11 +5,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const adminSecret = process.env.ADMIN_SECRET;
-if (!adminSecret || adminSecret.length < 32) {
-  throw new Error("ADMIN_SECRET env var must be set and at least 32 characters.");
+// Lazily resolve & validate ADMIN_SECRET on first request — NOT at module
+// load. A module-scope throw runs during `next build` and breaks it.
+let _secret: Uint8Array | null = null;
+function getSecret(): Uint8Array {
+  if (_secret) return _secret;
+  const adminSecret = process.env.ADMIN_SECRET;
+  if (!adminSecret || adminSecret.length < 32) {
+    throw new Error("ADMIN_SECRET env var must be set and at least 32 characters.");
+  }
+  return (_secret = new TextEncoder().encode(adminSecret));
 }
-const SECRET = new TextEncoder().encode(adminSecret);
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -27,7 +33,7 @@ export async function middleware(req: NextRequest) {
   }
 
   try {
-    await jwtVerify(token, SECRET);
+    await jwtVerify(token, getSecret());
     return NextResponse.next();
   } catch {
     return NextResponse.redirect(new URL("/admin/login", req.url));

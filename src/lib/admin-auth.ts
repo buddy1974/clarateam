@@ -6,11 +6,21 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 
-const adminSecret = process.env.ADMIN_SECRET;
-if (!adminSecret || adminSecret.length < 32) {
-  throw new Error("ADMIN_SECRET env var must be set and at least 32 characters.");
+/**
+ * Lazily resolve & validate ADMIN_SECRET on first use — NOT at module load.
+ * Throwing at module scope runs during `next build` (page-data collection),
+ * which breaks the build even though no request is being served. Lazy
+ * resolution keeps the runtime guard intact while decoupling it from build.
+ */
+let _secret: Uint8Array | null = null;
+function getSecret(): Uint8Array {
+  if (_secret) return _secret;
+  const adminSecret = process.env.ADMIN_SECRET;
+  if (!adminSecret || adminSecret.length < 32) {
+    throw new Error("ADMIN_SECRET env var must be set and at least 32 characters.");
+  }
+  return (_secret = new TextEncoder().encode(adminSecret));
 }
-const SECRET = new TextEncoder().encode(adminSecret);
 
 export interface AdminTokenPayload {
   userId:      number;
@@ -23,12 +33,12 @@ export async function signAdminToken(payload: AdminTokenPayload): Promise<string
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime("7d")
-    .sign(SECRET);
+    .sign(getSecret());
 }
 
 export async function verifyAdminToken(token: string): Promise<AdminTokenPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, SECRET);
+    const { payload } = await jwtVerify(token, getSecret());
     return payload as unknown as AdminTokenPayload;
   } catch {
     return null;
