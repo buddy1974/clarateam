@@ -5,9 +5,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const SECRET = new TextEncoder().encode(
-  process.env.ADMIN_SECRET ?? "clarateam-admin-secret-change-me"
-);
+const adminSecret = process.env.ADMIN_SECRET;
+if (!adminSecret || adminSecret.length < 32) {
+  throw new Error("ADMIN_SECRET env var must be set and at least 32 characters.");
+}
+const SECRET = new TextEncoder().encode(adminSecret);
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

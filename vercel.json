@@ -3,6 +3,13 @@
 
   "ignoreCommand": "! git diff HEAD^ HEAD --name-only | grep -qE '^(src/|public/|package\\.json|next\\.config)'",
 
+  "crons": [
+    {
+      "path": "/api/cron/overdue-check",
+      "schedule": "*/30 * * * *"
+    }
+  ],
+
   "headers": [
     {
       "source": "/(.*)\\.(png|jpg|jpeg|webp|avif|svg|ico|woff2|woff|ttf)",

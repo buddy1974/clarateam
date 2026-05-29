@@ -3,8 +3,16 @@ import { authenticator } from "otplib";
 import { db, adminUsers } from "@/db";
 import { eq } from "drizzle-orm";
 import { signAdminToken } from "@/lib/admin-auth";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  // Rate limit: max 5 login attempts per IP per 15 minutes
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
+  const { allowed } = rateLimit(`login:${ip}`, { windowMs: 15 * 60 * 1000, max: 5 });
+  if (!allowed) {
+    return NextResponse.json({ error: "Too many attempts. Try again in 15 minutes." }, { status: 429 });
+  }
+
   const { handle, code } = await req.json();
 
   if (!handle || !code) {

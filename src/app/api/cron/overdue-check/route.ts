@@ -10,38 +10,33 @@
  * Can also be triggered manually from /admin/operations page.
  */
 
+/**
+ * Vercel cron — runs every 30 min via vercel.json.
+ * Authenticated by CRON_SECRET (set in Vercel env vars).
+ * Directly runs the overdue detection logic (no internal HTTP call).
+ */
 import { NextRequest, NextResponse } from "next/server";
+import { runOverdueCheck } from "@/lib/overdue-check";
 
-export async function POST(req: NextRequest) {
-  // Verify this is a Vercel cron request or an admin call
-  const authHeader = req.headers.get("authorization");
+export async function GET(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
 
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  // Default-deny when secret is not configured
+  if (!cronSecret) {
+    return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 401 });
+  }
+
+  // Vercel sends the secret as Authorization: Bearer <secret>
+  const authHeader = req.headers.get("authorization");
+  if (authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    // Delegate to the overdue detection endpoint
-    const baseUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000";
-
-    const res = await fetch(`${baseUrl}/api/admin/alerts/overdue`, {
-      method: "POST",
-      headers: {
-        // Pass admin cookie through (cron runs in same origin context)
-        "x-cron-trigger": "true",
-      },
-    });
-
-    const data = await res.json();
-    return NextResponse.json({ ok: true, ...data });
+    const result = await runOverdueCheck();
+    return NextResponse.json({ ok: true, ...result });
   } catch (err) {
-    console.error("Cron overdue check failed:", err);
+    console.error("[cron/overdue-check]", err);
     return NextResponse.json({ error: "Cron check failed" }, { status: 500 });
   }
 }
-
-// Also support GET for Vercel cron (some versions use GET)
-export const GET = POST;
