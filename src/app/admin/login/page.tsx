@@ -41,7 +41,17 @@ export default function AdminLogin() {
     if (res.ok) {
       router.push("/admin");
     } else {
-      setError("Incorrect code — try again.");
+      // Surface the real reason instead of always blaming the code.
+      let msg = "Incorrect code — try again.";
+      if (res.status === 429) {
+        msg = "Too many attempts. Wait 15 minutes, then try once.";
+      } else {
+        try {
+          const j = await res.json();
+          if (j?.error) msg = j.error;
+        } catch { /* keep default */ }
+      }
+      setError(msg);
       setDigits(["", "", "", "", "", ""]);
       setLoading(false);
       setTimeout(() => inputRefs.current[0]?.focus(), 50);

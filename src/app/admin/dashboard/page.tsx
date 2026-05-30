@@ -37,10 +37,19 @@ export default function DashboardPage() {
   const [recent, setRecent]   = useState<RecentApplicant[]>([]);
   const [loading, setLoading] = useState(true);
   const [time, setTime]       = useState(new Date());
+  const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
     const t = setInterval(() => setTime(new Date()), 60_000);
     return () => clearInterval(t);
+  }, []);
+
+  // Greet the actually-logged-in user (same source AdminShell uses).
+  useEffect(() => {
+    fetch("/api/admin/me")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (d?.userName) setUserName(d.userName); })
+      .catch(() => {});
   }, []);
 
   const load = useCallback(async () => {
@@ -130,7 +139,7 @@ export default function DashboardPage() {
       <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-serif text-2xl font-bold text-gray-900">
-            {greeting()}, Jessica 👋
+            {greeting()}{userName ? `, ${userName.split(" ")[0]}` : ""} 👋
           </h1>
           <p className="mt-0.5 text-sm text-gray-500">
             {time.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })} · ClaraCare OS
